@@ -16,10 +16,10 @@
 
 Ресурсы:
 
-- http://railscasts.com/episodes/357-adding-ssl?view=asciicast - старый, но очень понятный `RailsCast`
 - https://github.com/FiloSottile/mkcert - инструмент для настройки локальных сертификатов одной командой
 - https://www.nginx.com/blog/nginx-1-13-9-http2-server-push/ - настройка `http2-server-push` в `NGinx`.
 - https://github.com/surma/http2-push-detect - утилита для проверки `server-push`
+- http://railscasts.com/episodes/357-adding-ssl?view=asciicast - старый, но очень понятный `RailsCast`
 
 ### Шаг 1. Настроить сертификат для локального HTTPS
 
