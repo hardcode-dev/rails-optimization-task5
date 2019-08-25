@@ -145,6 +145,7 @@ docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:9.8.1 --mobil
 # -n 5 - 5 повторов
 # --preUrl https://host.docker.internal/ - урл, первого захода
 # https://host.docker.internal/ - урл повтороного захода, который и анализируем
+# а вообще https://host.docker.internal/ - это https://localhost, на котором стоит ваш локальный `HTTP/2-proxy` с точки зрения `docker`.
 ```
 
 Откройте сгенерированный отчёт, зайдите на вкладку `Pages`, там провалитесь в отчёт по единственной странице, и внизу воспользуйтесь кнопкой `DOWNLOAD HAR` - и сохраните `HAR`-файла, закомиттьте его.
