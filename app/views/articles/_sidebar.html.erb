@@ -1,0 +1,82 @@
+<div id="sidebar-wrapper-left" class="sidebar-wrapper sidebar-wrapper-left">
+  <div class="sidebar-bg" id="sidebar-bg-left"></div>
+  <div class="side-bar">
+    <% cache("main-sidebar-nav--#{user_signed_in?}", expires_in: 5.days) do %>
+      <%= render "articles/sidebar_nav" %>
+      <div class="widget sponsorship-widget <%= "showing" unless user_signed_in? %>" id="sponsorship-widget">
+        <header>
+          <a href="/sponsors"><h4>community sponsors</h4></a>
+          <span class="emoji">
+            <img src="<%= asset_path "emoji/emoji-one-heart.png" %>" alt="emoji heart" />
+          </span>
+        </header>
+        <div class="widget-body">
+          <div class="sidebar-sponsor">
+            <a class="partner-link" href="https://do.co/devto" target="_blank" data-details="digitalocean__image">
+              <img src="<%= cloudinary("https://thepracticaldev.s3.amazonaws.com/i/85318v8gv77kzr8r2e58.png") %>" style="margin-bottom:8px;" alt="Digital Ocean logo" />
+            </a>
+            <div class="sponsor-tagline" style="display:inline;">
+              The simplest cloud platform for developers & teams.
+              <a class="partner-link sponsor-learn-more" href="https://do.co/devto" target="_blank" data-details="digitalocean__learn-more">
+                Learn More
+              </a>
+            </div>
+          </div>
+          <div class="sidebar-sponsor">
+            <a class="partner-link" href="https://triplebyte.com/a/YU8fSn0/homepage-tag" target="_blank" data-details="triplebyte__image">
+              <img src="<%= cloudinary("https://thepracticaldev.s3.amazonaws.com/i/r50i600z08ty2sjwey4o.png") %>" alt="Triplebyte logo" />
+            </a>
+            <div class="sponsor-tagline">
+              Do one coding quiz, get multiple job offers.
+              <a class="partner-link sponsor-learn-more" href="https://triplebyte.com/a/YU8fSn0/homepage-tag" target="_blank" data-details="triplebyte__learn-more">
+                Learn More
+              </a>
+            </div>
+          </div>
+          <div class="sidebar-sponsor">
+            <a class="partner-link" href="https://www.gocd.org/?utm_campaign=dev_to&utm_medium=dev_homepage&utm_source=logo_link&utm_content=gocd_homepage&utm_term=" target="_blank" data-details="gocd__image">
+              <img src="<%= cloudinary("https://thepracticaldev.s3.amazonaws.com/i/ju8bfjsh7bcvw21p19nh.png") %>" alt="GoCD logo" />
+            </a>
+            <div class="sponsor-tagline">
+              A Free and Open Source CI/CD Server.
+              <a class="partner-link sponsor-learn-more" href="https://www.gocd.org/?utm_campaign=dev_to&utm_medium=dev_homepage&utm_source=logo_link&utm_content=gocd_homepage&utm_term=" target="_blank" data-details="gocd__learn-more">
+                Learn More
+              </a>
+            </div>
+          </div>
+          <div class="sponsors-love-message">
+            We are grateful for wonderful sponsors who help sustain the dev community.
+          </div>
+          <div class="sponsor-footer">
+            <p>
+              <a href="/sponsorship-info">Sponsorship Info/Policy</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="widget">
+        <header>
+          <h4>key links</h4>
+        </header>
+        <div class="widget-body">
+          <a href="https://twitter.com/thepracticaldev" target="_blank" rel="noopener"><img src="<%= asset_path("twitter-logo.svg") %>" alt="Twitter logo" class="social-icon" /></a>
+          <a href="https://github.com/thepracticaldev" target="_blank" rel="noopener"><img src="<%= asset_path("github-logo.svg") %>" alt="GitHub logo" class="social-icon" /></a>
+          <a href="https://instagram.com/thepracticaldev" target="_blank" rel="noopener"><img src="<%= asset_path("instagram-logo.svg") %>" alt="Instagram logo" class="social-icon" /></a>
+          <a href="https://facebook.com/thepracticaldev" target="_blank" rel="noopener"><img src="<%= asset_path("facebook-logo.svg") %>" alt="Facebook logo" class="social-icon" /></a>
+          <a href="https://twitch.tv/thepracticaldev" target="_blank" rel="noopener"><img src="<%= asset_path("twitch-logo.svg") %>" alt="Twitch logo" class="social-icon" /></a>
+        </div>
+        <div class="side-footer">
+          <a href="/about">About</a>
+          <a href="/events">Events</a>
+          <a href="/sponsors">Sponsors</a>
+          <a href="https://shop.dev.to/">DEV Shop</a>
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms of Use</a>
+          <a href="/contact">Contact</a>
+          <a href="/faq">FAQ</a>
+          <a href="/code-of-conduct">Code of Conduct</a>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

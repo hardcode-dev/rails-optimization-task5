@@ -1,0 +1,58 @@
+<h3>Email Notification Settings</h3>
+<%= form_for(@user) do |f| %>
+  <div class="checkbox-field">
+    <div class="sub-field">
+      <%= f.check_box :email_newsletter %>
+      <%= f.label :email_newsletter, "Send me weekly newsletter emails" %>
+    </div>
+    <div class="sub-field">
+      <%= f.check_box :email_digest_periodic %>
+      <%= f.label :email_digest_periodic, "Send me a periodic digest of top posts from my tags" %>
+    </div>
+    <% if current_user.a_sustaining_member? %>
+      <div class="sub-field">
+        <%= f.check_box :email_membership_newsletter %>
+        <%= f.label :email_membership_newsletter, "Send me sustaining membership newsletter emails" %>
+      </div>
+    <% end %>
+    <div class="sub-field">
+      <%= f.check_box :email_comment_notifications %>
+      <%= f.label :email_comment_notifications, "Send me an email when someone replies to me in a comment thread" %>
+    </div>
+    <div class="sub-field">
+      <%= f.check_box :email_follower_notifications %>
+      <%= f.label :email_follower_notifications, "Send me an email when someone new follows me" %>
+    </div>
+    <div class="sub-field">
+      <%= f.check_box :email_mention_notifications %>
+      <%= f.label :email_mention_notifications, "Send me an email when someone mentions me" %>
+    </div>
+    <div class="sub-field">
+      <%= f.check_box :email_badge_notifications %>
+      <%= f.label :email_badge_notifications, "Send me an email when I receive a badge" %>
+    </div>
+    <div class="sub-field">
+      <%= f.check_box :email_connect_messages %>
+      <%= f.label :email_connect_messages, "Send me an email when I receive a direct message (while inactive)" %>
+    </div>
+    <div class="sub-field">
+      <%= f.check_box :email_unread_notifications %>
+      <%= f.label :email_unread_notifications, "Send me occasional reminders that I have unread notifications on dev.to" %>
+    </div>
+  </div>
+  <h3>Mobile Notification Settings (Beta)</h3>
+  <p>
+    <em>iOS only for now. Additional settings and platforms will be rolled out as new notification features are made available.</em>
+  </p>
+  <div class="checkbox-field">
+    <div class="sub-field">
+      <%= f.check_box :mobile_comment_notifications %>
+      <%= f.label :mobile_comment_notifications, "Notify me when someone replies to me in a comment thread" %>
+    </div>
+  </div>
+  <div class="field">
+    <label></label>
+    <%= f.hidden_field :tab, value: @tab %>
+    <%= f.submit "SUBMIT", class: "cta" %>
+  </div>
+<% end %>
