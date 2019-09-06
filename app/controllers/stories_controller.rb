@@ -3,6 +3,8 @@ class StoriesController < ApplicationController
   before_action :set_cache_control_headers, only: %i[index search show]
 
   def index
+    response.headers['Link'] = push_headers.join(', ')
+
     add_param_context(:username, :tag)
     return handle_user_or_organization_or_podcast_index if params[:username]
     return handle_tag_index if params[:tag]
@@ -39,6 +41,22 @@ class StoriesController < ApplicationController
   end
 
   private
+
+  def push_headers
+    [
+      "<#{view_context.asset_path('bell.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('menu.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('connect.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('stack.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('lightning.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('twitter-logo.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('github-logo.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('instagram-logo.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('facebook-logo.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('twitch-logo.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('cancel.svg')}>; rel=preload; as=image",
+    ]
+  end
 
   def redirect_to_changed_username_profile
     potential_username = params[:username].tr("@", "").downcase
