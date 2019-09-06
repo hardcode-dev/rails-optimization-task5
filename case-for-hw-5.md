@@ -42,3 +42,7 @@ Transfer rate:          3981.13 [Kbytes/sec] received
 
 В waterflow картинка пропала.
 ![images2](https://raw.githubusercontent.com/VidgarVii/rails-optimization-2-task4/master/fixtures/big_image2.png)
+
+
+## Sitespeed
+![Sitespeed](https://raw.githubusercontent.com/VidgarVii/rails-optimization-2-task5/master/fixtures/sitespeed.png)
