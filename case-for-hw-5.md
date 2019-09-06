@@ -46,3 +46,11 @@ Transfer rate:          3981.13 [Kbytes/sec] received
 
 ## Sitespeed
 ![Sitespeed](https://raw.githubusercontent.com/VidgarVii/rails-optimization-2-task5/master/fixtures/sitespeed.png)
+
+Залил har файл в https://compare.sitespeed.io/
+
+![har_1](https://raw.githubusercontent.com/VidgarVii/rails-optimization-2-task5/master/fixtures/har_1.png)
+
+
+![har_2](https://raw.githubusercontent.com/VidgarVii/rails-optimization-2-task5/master/fixtures/har_1.png)
+
