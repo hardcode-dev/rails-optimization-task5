@@ -53,3 +53,4 @@ package-lock.json
 
 #sitemap
 /public/sitemap.xml.gz
+sitespeed/sitespeed-result
