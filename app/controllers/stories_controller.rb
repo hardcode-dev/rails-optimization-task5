@@ -4,6 +4,15 @@ class StoriesController < ApplicationController
 
   def index
     add_param_context(:username, :tag)
+    push_headers = [
+      "<#{view_context.asset_path('bell.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('menu.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('connect.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('stack.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('lightning.svg')}>; rel=preload; as=image",
+    ]
+    response.headers["Link"] = push_headers.join(", ")
+
     return handle_user_or_organization_or_podcast_index if params[:username]
     return handle_tag_index if params[:tag]
 
