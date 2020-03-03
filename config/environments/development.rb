@@ -1,7 +1,8 @@
 # rubocop:disable Metrics/BlockLength
 #
 def yarn_integrity_enabled?
-  ENV.fetch("YARN_INTEGRITY_ENABLED", "true") == "true"
+  # ENV.fetch("YARN_INTEGRITY_ENABLED", "true") == "true"
+  false
 end
 
 Rails.application.configure do
