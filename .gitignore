@@ -53,3 +53,12 @@ package-lock.json
 
 #sitemap
 /public/sitemap.xml.gz
+Envfile
+config/skylight.yml
+config/newrelic.yml
+/public/packs
+/public/packs-test
+/node_modules
+yarn-debug.log*
+.yarn-integrity
+Envfile
