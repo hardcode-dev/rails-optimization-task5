@@ -45,7 +45,7 @@ variable :TWITTER_SECRET, :String, default: "Optional"
 
 # Airbrake for error tracking
 variable :AIRBRAKE_API_KEY, :String, default: "Optional"
-variable :AIRBRAKE_PROJECT_ID, :integer, default: 00000
+variable :AIRBRAKE_PROJECT_ID, :integer, default: 105138
 
 # Algolia for search (not optional)
 only_in_test = proc { ENV['RACK_ENV'] == "test" ? "test-test" : nil}
@@ -148,6 +148,7 @@ variable :TRENDING_TAGS, :String, default: "git,beginners"
 variable :FACEBOOK_PIXEL_ID, :String, default: "Optional"
 variable :SMARTY_STREETS_WEB_KEY, :String, default: "Optional"
 
+variable :NEW_RELIC_SECRET_KEY, :String, default: 'eu01xxc4fdf06fbcb3ca00aab6d200b826faNRAL'
 
 group :production do
   variable :SECRET_KEY_BASE, :String
