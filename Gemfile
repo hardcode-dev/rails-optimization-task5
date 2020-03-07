@@ -1,6 +1,6 @@
 # rubocop:disable LineLength
 source "https://rubygems.org"
-ruby "2.6.1"
+ruby "2.6.3"
 
 # Enforce git to transmitted via https.
 # workaround until bundler 2.0 is released.
@@ -102,6 +102,20 @@ gem "uglifier", "~> 4.1"
 gem "validate_url", "~> 1.0"
 gem "webpacker", "~> 3.5"
 gem "webpush", "~> 0.3"
+gem "faker", git: "https://github.com/stympy/faker.git", branch: "master"
+
+# profilers
+gem 'flamegraph'
+gem 'memory_profiler'
+gem 'meta_request'
+gem 'rack-mini-profiler', require: false
+gem 'stackprof'
+
+# prometheus
+gem "yabeda-rails"
+gem "yabeda-prometheus"
+gem "yabeda-puma-plugin"
+gem "prometheus-client"
 
 group :development do
   gem "better_errors", "~> 2.5"
@@ -121,15 +135,15 @@ group :development, :test do
   gem "capybara", "~> 3.13"
   gem "derailed", "~> 0.1"
   gem "erb_lint", "~> 0.0", require: false
-  gem "faker", git: "https://github.com/stympy/faker.git", branch: "master"
   gem "fix-db-schema-conflicts", github: "thepracticaldev/fix-db-schema-conflicts", branch: "master"
-  gem "memory_profiler", "~> 0.9"
   gem "parallel_tests", "~> 2.27"
   gem "pry-byebug", "~> 3.7"
   gem "rspec-rails", "~> 3.8"
   gem "rspec-retry", "~> 0.6"
-  gem "rubocop", "~> 0.63", require: false
+  gem "rubocop", require: false
+  gem "rubocop-performance"
   gem "rubocop-rspec", "~> 1.31"
+  gem "rubocop-faker"
   gem "spring", "~> 2.0"
   gem "spring-commands-rspec", "~> 1.0"
   gem "vcr", "~> 4.0"
@@ -149,7 +163,6 @@ group :test do
   gem "shoulda-matchers", "4.0.0.rc1", require: false
   gem "simplecov", "~> 0.16", require: false
   gem "sinatra", "~> 2.0"
-  gem "stackprof", "~> 0.2", require: false, platforms: :ruby
   gem "stripe-ruby-mock", "~> 2.5", require: "stripe_mock"
   gem "test-prof", "~> 0.7"
   gem "timecop", "~> 0.9"

@@ -54,3 +54,8 @@ production:
 
   # Cache manifest.json for performance
   cache_manifest: true
+
+local_production:
+  <<: *default
+  compile: false
+  cache_manifest: true

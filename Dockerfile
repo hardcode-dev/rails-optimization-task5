@@ -1,4 +1,4 @@
-FROM ruby:2.6.1
+FROM ruby:2.6.3
 
 # Make nodejs and yarn as dependencies
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
@@ -12,20 +12,30 @@ RUN apt-get update -qq && apt-get install -y \
    yarn \
  && apt-get -q clean \
  && rm -rf /var/lib/apt/lists
-
-WORKDIR /usr/src/app
-ENV RAILS_ENV development
+ENV APP_HOME /usr/src/app
+WORKDIR $APP_HOME
+ARG RAILS_ENV
 
 # Installing Ruby dependencies
-COPY Gemfile* ./
-RUN gem install bundler
-RUN bundle install --jobs 20 --retry 5
+COPY Gemfile Gemfile.lock ./
 
-# Install JavaScript dependencies
-COPY yarn.lock ./
+RUN bundle check || bundle install --without development test \
+    && rm -rf vendor/cache/*.gem
+
+ADD . $APP_HOME
+
+CMD touch tmp/caching-dev.txt
+
 ENV YARN_INTEGRITY_ENABLED "false"
+ARG RAILS_ENV
+ARG ALGOLIASEARCH_API_KEY
+ARG ALGOLIASEARCH_APPLICATION_ID
+ARG ALGOLIASEARCH_SEARCH_ONLY_KEY
+ARG AWS_ID
+ARG AWS_SECRET
+ARG AWS_BUCKET_NAME
+ARG AWS_REGION
+
 RUN yarn install && yarn check --integrity
 
-ENTRYPOINT ["bundle", "exec"]
-
-CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+CMD bundle exec puma -C config/puma.rb

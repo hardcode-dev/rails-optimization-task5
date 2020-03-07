@@ -10,10 +10,10 @@ CarrierWave.configure do |config|
     config.storage = :fog
     config.fog_credentials = {
       provider: "AWS",
-      aws_access_key_id: ApplicationConfig["AWS_ID"],
-      aws_secret_access_key: ApplicationConfig["AWS_SECRET"],
-      region: "us-east-1"
+      aws_access_key_id: ApplicationConfig["AWS_ID"] || ENV["AWS_ID"],
+      aws_secret_access_key: ApplicationConfig["AWS_SECRET"] || ENV["AWS_SECRET"],
+      region: ApplicationConfig["AWS_REGION"] || ENV["AWS_SECRET"]
     }
-    config.fog_directory = ApplicationConfig["AWS_BUCKET_NAME"]
+    config.fog_directory = ApplicationConfig["AWS_BUCKET_NAME"] || ENV["AWS_BUCKET_NAME"]
   end
 end

@@ -53,5 +53,6 @@ module PracticalDeveloper
       end
       ReservedWords.all = [ReservedWords::BASE_WORDS + top_routes].flatten.compact.uniq
     end
+    config.skylight.environments += ["local_production"]
   end
 end
