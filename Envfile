@@ -57,6 +57,7 @@ variable :ALGOLIASEARCH_SEARCH_ONLY_KEY, :String, default: only_in_test
 variable :AWS_ID, :String, default: "Optional"
 variable :AWS_SECRET, :String, default: "Optional"
 variable :AWS_BUCKET_NAME, :String, default: "Optional"
+variable :AWS_REGION, :String, default: "Optional"
 
 # AWS SDK
 variable :AWS_DEFAULT_REGION, :String, default: "us-east-1"
