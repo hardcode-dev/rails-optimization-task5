@@ -5,5 +5,5 @@
   - [Скрин compare before](https://prnt.sc/rd1d4h)
   - [Скрин compare after](https://prnt.sc/rd1daj)
 
-* Сравнил через ker run --rm -v "\$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:12.1.0 https://thinknetica.railsdev.site/
+* Сравнил через docker run --rm -v "\$(pwd)":/sitespeed.io sitespeedio/sitespeed.io:12.1.0 https://thinknetica.railsdev.site/
   - Вариант с сервер пуш - указал падения First Paint, First Visual Change, Fully Loaded на 130 мс каждый
