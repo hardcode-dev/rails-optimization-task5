@@ -1,16 +1,20 @@
 version: "3"
+volumes:
+  postgres-data:
+    driver: local
+
 services:
-  web: &rails_base
+  app: &rails_base
     build:
       dockerfile: Dockerfile
       context: .
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      - postgres
     environment:
       RAILS_ENV: development
-      DATABASE_URL: postgres://postgres:mysecretpassword@db:5432/postgres
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
       YARN_INTEGRITY_ENABLED: "false"
     volumes:
       - .:/usr/src/app
@@ -23,7 +27,16 @@ services:
     ports: []
     <<: *rails_base
     command: ./bin/webpack-dev-server
-  db:
-    image: postgres
+  postgres:
+    image: postgres:11.1-alpine
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/DockerFile
+    depends_on:
+      - app
     ports:
-    - "5432:5432"
+      - 80:80
+      - 443:443
