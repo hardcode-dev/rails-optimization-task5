@@ -1,6 +1,23 @@
 version: "3"
 services:
+  nginx:
+    build:
+      dockerfile: nginx/Dockerfile
+      context: .
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - db
+    networks:
+      - app-network
   web: &rails_base
+    tty: true
+    stdin_open: true
     build:
       dockerfile: Dockerfile
       context: .
@@ -10,20 +27,39 @@ services:
       - db
     environment:
       RAILS_ENV: development
-      DATABASE_URL: postgres://postgres:mysecretpassword@db:5432/postgres
+      DATABASE_URL: postgres://rails:password@db:5432/postgres
       YARN_INTEGRITY_ENABLED: "false"
     volumes:
       - .:/usr/src/app
     command: bundle exec rails server -b 0.0.0.0 -p 3000
+    networks:
+      - app-network
   jobs:
     ports: []
     <<: *rails_base
     command: rails jobs:work
+    depends_on:
+      - web
+    networks:
+      - app-network
   webpacker:
     ports: []
     <<: *rails_base
     command: ./bin/webpack-dev-server
+    depends_on:
+      - web
+    networks:
+      - app-network
   db:
     image: postgres
     ports:
     - "5432:5432"
+    environment:
+      POSTGRES_USER: rails
+      POSTGRES_PASSWORD: password
+    networks:
+      - app-network
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge

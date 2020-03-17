@@ -1,4 +1,4 @@
-FROM ruby:2.6.1
+FROM ruby:2.6.1 AS BUILDER
 
 # Make nodejs and yarn as dependencies
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
@@ -18,14 +18,15 @@ ENV RAILS_ENV development
 
 # Installing Ruby dependencies
 COPY Gemfile* ./
-RUN gem install bundler
+RUN gem install bundler -v 1.17.3
 RUN bundle install --jobs 20 --retry 5
 
 # Install JavaScript dependencies
-COPY yarn.lock ./
+COPY package.json ./
 ENV YARN_INTEGRITY_ENABLED "false"
 RUN yarn install && yarn check --integrity
 
+FROM BUILDER
 ENTRYPOINT ["bundle", "exec"]
 
 CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
