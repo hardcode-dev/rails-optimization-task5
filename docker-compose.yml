@@ -7,12 +7,12 @@ services:
     restart: unless-stopped
     tty: true
     volumes:
-      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./nginx/conf.d/:/etc/nginx/conf.d/:ro
     ports:
       - "80:80"
       - "443:443"
     depends_on:
-      - db
+      - web
     networks:
       - app-network
   web: &rails_base
@@ -40,6 +40,7 @@ services:
     command: rails jobs:work
     depends_on:
       - web
+      - db
     networks:
       - app-network
   webpacker:

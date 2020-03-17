@@ -27,6 +27,6 @@ ENV YARN_INTEGRITY_ENABLED "false"
 RUN yarn install && yarn check --integrity
 
 FROM BUILDER
-ENTRYPOINT ["bundle", "exec"]
+#ENTRYPOINT ["bundle", "exec"]
 
-CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+#CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
