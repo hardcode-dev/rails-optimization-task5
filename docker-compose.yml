@@ -8,6 +8,7 @@ services:
     tty: true
     volumes:
       - ./nginx/conf.d/:/etc/nginx/conf.d/:ro
+      - ./keys/:/keys/:ro
     ports:
       - "80:80"
       - "443:443"
