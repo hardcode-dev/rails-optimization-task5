@@ -1,14 +1,30 @@
 version: "3"
 services:
+  speedio:
+    build:
+#  cd thirdparty && git clone https://github.com/sitespeedio/sitespeed.io.git
+      dockerfile: Dockerfile
+      context: thirdparty/sitespeed.io/
+    volumes:
+      - ./thirdparty/sitespeed.io/sitespeed-result:/sitespeed.io/sitespeed-result
+    stdin_open: true
+    tty: true
+    depends_on:
+      - web
+      - nginx
+    networks:
+      - app-network
   nginx:
     build:
       dockerfile: nginx/Dockerfile
       context: .
     restart: unless-stopped
+    stdin_open: true
     tty: true
     volumes:
-      - ./nginx/conf.d/:/etc/nginx/conf.d/:ro
-      - ./keys/:/keys/:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./keys/:/keys/
     ports:
       - "80:80"
       - "443:443"
