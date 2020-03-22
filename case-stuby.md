@@ -14,3 +14,5 @@
 ###
 
 результаты сравнения и har в файле `sitespeed.ioresult.zip`
+ссылка на сравнение
+https://htmlpreview.github.io/?https://github.com/volartm/rails-optimization-task5/blob/master/speedio_result/3_21_2020%2C%2011%2037%2018%20PM%20vs%203_21_2020%2C%2011%2046%2028%20PM.html
