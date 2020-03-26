@@ -1,6 +1,40 @@
 version: "3"
 services:
+  speedio:
+    build:
+#  cd thirdparty && git clone https://github.com/sitespeedio/sitespeed.io.git
+      dockerfile: Dockerfile
+      context: thirdparty/sitespeed.io/
+    volumes:
+      - ./thirdparty/sitespeed.io/sitespeed-result:/sitespeed.io/sitespeed-result
+    stdin_open: true
+    tty: true
+    depends_on:
+      - web
+      - nginx
+    networks:
+      - app-network
+  nginx:
+    build:
+      dockerfile: nginx/Dockerfile
+      context: .
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./keys/:/keys/
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+    networks:
+      - app-network
   web: &rails_base
+    tty: true
+    stdin_open: true
     build:
       dockerfile: Dockerfile
       context: .
@@ -10,20 +44,40 @@ services:
       - db
     environment:
       RAILS_ENV: development
-      DATABASE_URL: postgres://postgres:mysecretpassword@db:5432/postgres
+      DATABASE_URL: postgres://rails:password@db:5432/postgres
       YARN_INTEGRITY_ENABLED: "false"
     volumes:
       - .:/usr/src/app
     command: bundle exec rails server -b 0.0.0.0 -p 3000
+    networks:
+      - app-network
   jobs:
     ports: []
     <<: *rails_base
     command: rails jobs:work
+    depends_on:
+      - web
+      - db
+    networks:
+      - app-network
   webpacker:
     ports: []
     <<: *rails_base
     command: ./bin/webpack-dev-server
+    depends_on:
+      - web
+    networks:
+      - app-network
   db:
     image: postgres
     ports:
     - "5432:5432"
+    environment:
+      POSTGRES_USER: rails
+      POSTGRES_PASSWORD: password
+    networks:
+      - app-network
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
