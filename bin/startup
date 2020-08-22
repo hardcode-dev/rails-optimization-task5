@@ -11,6 +11,13 @@ def system!(*args)
 end
 
 chdir APP_ROOT do
+  suffix =
+      if ARGV[0] == 'local_production'
+        ARGV[0]
+      else
+        'dev'
+      end
+
   puts "== STARTING UP =="
-  system! "foreman start -f Procfile.dev"
+  system! "foreman start -f Procfile.#{suffix}"
 end
