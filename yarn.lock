@@ -5432,6 +5432,18 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
+http2-push-detect@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/http2-push-detect/-/http2-push-detect-1.0.4.tgz#1b04ce57a27b64cd1a6a7306842d81fb206d65d9"
+  integrity sha1-GwTOV6J7ZM0aanMGhC2B+yBtZdk=
+  dependencies:
+    http2 "^3.3.4"
+
+http2@^3.3.4:
+  version "3.3.7"
+  resolved "https://registry.yarnpkg.com/http2/-/http2-3.3.7.tgz#78396eb1e0bcd1db1f4b138d997c682e23414fbc"
+  integrity sha512-puSi8M8WNlFJm9Pk4c/Mbz9Gwparuj3gO9/RRO5zv6piQ0FY+9Qywp0PdWshYgsMJSalixFY7eC6oPu0zRxLAQ==
+
 https-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
