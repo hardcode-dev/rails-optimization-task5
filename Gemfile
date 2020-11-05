@@ -1,6 +1,6 @@
 # rubocop:disable LineLength
 source "https://rubygems.org"
-ruby "2.6.1"
+ruby "2.6.3"
 
 # Enforce git to transmitted via https.
 # workaround until bundler 2.0 is released.
@@ -156,4 +156,7 @@ group :test do
   gem "webmock", "~> 3.5"
   gem "zonebie", "~> 0.6.1"
 end
+
+gem "influxer", "~> 1.2"
+gem "tty-command"
 # rubocop:enable LineLength

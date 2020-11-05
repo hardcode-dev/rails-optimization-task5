@@ -172,10 +172,9 @@ docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io --mobile -n 5
 
 - [x] Реализация `server-push` для указанных в задании картинок
 - [x] Конфиг `NGinx`
-- [x] Ссылка на сравнение `HAR`-файлов с `server-push` и без
-- [ ] Бонус 1 про `dev.to`
+- [x] Ссылка на сравнение `HAR`-файлов с `server-push` и без https://prnt.sc/v36526
+- [] Бонус 1 про `dev.to`
 - [ ] Бонус 2 про `Falcon`
-
 
 ## Bonus 1. Аудит dev.to
 
@@ -184,6 +183,9 @@ docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io --mobile -n 5
 Видите ли вы какие-то возможности использовать возможности `HTTP/2` для оптимизации `dev.to`, исходя из отчётов `WPT`?
 
 Видите ли какие-то точки роста в остальном?
+
+1. Возможно нужно внести в HSTS PRELOAD LIST - для первой загрузки
+2. И воспользоваться server-push некоторых ресурсов.
 
 ## Bonus 2. Falcon HTTP/2
 
