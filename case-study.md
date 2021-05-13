@@ -53,18 +53,30 @@ Receiving pushed resource: /assets/lightning.svg
 Предварительно видно, что время загрузки страницы при включении пушей сокращается.
 
 График загрузки в devtools по включения server-push:
-![menu-svg-no-push.png](menu-svg-no-push.png)
+![menu-svg-no-push.png](report/menu-svg-no-push.png)
 
 ...и после:
-![menu-svg-with-push.png](menu-svg-with-push.png)
+![menu-svg-with-push.png](report/menu-svg-with-push.png)
 
 ## Шаг 5. Измерение эффекта сделанных изменений
 
-### 5.1 Анализ без `server-push`
-
-### 5.2. Анализ с `server-push`
+HAR-файлы без server-push и с ним находится в папке `report`, называются `browsertime-no-push.har` и `browsertime-with-push.har` соответственно.
 
 ### 5.3 Сравнение результатов
+
+Я не нашел, как сделать шеринг результатов сравнения, страница формируется динамически, поэтому отмечу основные моменты:
+
+- Общее сравнение показвает, что показатели скорости с пушем лучше,
+  чем без него:
+  ![sitespeed-overview.png](report/sitespeed-overview.png)
+- На "Waterfall" видна разница в загрузке картинок, они
+  переместились в начало. Кроме этого, также видно разницу в
+  скорости и другой порядок загрузки:
+  ![sitespeed-waterfall-no-push.png](report/sitespeed-waterfall-no-push.png)
+  ![sitespeed-waterfall-with-push.png](report/sitespeed-waterfall-with-push.png)
+
+Сравнение полностью сохранено в виде HTML-страницы в
+`report/5_13_2021, 6_04_20 PM vs 5_13_2021, 4_26_31 PM.html`.
 
 ## Bonus 1. Аудит dev.to
 
