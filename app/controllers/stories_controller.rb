@@ -1,6 +1,9 @@
 class StoriesController < ApplicationController
+  PUSH_IMAGES = %w[bell menu connect stack lightning].freeze
+
   before_action :authenticate_user!, except: %i[index search show feed new]
   before_action :set_cache_control_headers, only: %i[index search show]
+  before_action :set_server_push_headers, only: :index
 
   def index
     add_param_context(:username, :tag)
@@ -268,5 +271,11 @@ class StoriesController < ApplicationController
       per(num_articles)
     articles = articles.cached_tagged_with(tag) if tag.present? # More efficient than tagged_with
     articles
+  end
+
+  def set_server_push_headers
+    response.headers["Link"] = PUSH_IMAGES.map do |name|
+      "<#{view_context.asset_path("#{name}.svg")}>; rel=preload; as=image"
+    end.join(", ")
   end
 end
