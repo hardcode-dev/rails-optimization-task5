@@ -1,26 +1,18 @@
 GIT
-  remote: https://github.com/stympy/faker.git
-  revision: 9910aa58d92c018abab25d491191576fcc1a7707
-  branch: master
-  specs:
-    faker (1.9.1)
-      i18n (>= 0.7)
-
-GIT
-  remote: https://github.com/thepracticaldev/acts_as_follower.git
-  revision: 288690cd99bc470eaee493fce5bfa9fe23157692
+  remote: https://github.com/forem/acts_as_follower.git
+  revision: 06393d3693a1a3d4b390aec4976c8b8f3a81cf01
   branch: master
   specs:
     acts_as_follower (0.2.1)
       activerecord (>= 4.0)
 
 GIT
-  remote: https://github.com/thepracticaldev/fix-db-schema-conflicts.git
-  revision: 4172392392e1a8d907f7ab673cb5ddd9a4a31940
+  remote: https://github.com/stympy/faker.git
+  revision: 9910aa58d92c018abab25d491191576fcc1a7707
   branch: master
   specs:
-    fix-db-schema-conflicts (3.0.2)
-      rubocop (>= 0.38.0)
+    faker (1.9.1)
+      i18n (>= 0.7)
 
 GEM
   remote: https://rubygems.org/
@@ -119,6 +111,26 @@ GEM
       io-like (~> 0.3.0)
     arel (8.0.0)
     ast (2.4.0)
+    async (1.29.0)
+      console (~> 1.10)
+      nio4r (~> 2.3)
+      timers (~> 4.1)
+    async-container (0.16.11)
+      async (~> 1.0)
+      async-io (~> 1.26)
+    async-http (0.53.1)
+      async (~> 1.25)
+      async-io (~> 1.28)
+      async-pool (~> 0.2)
+      protocol-http (~> 0.21.0)
+      protocol-http1 (~> 0.13.0)
+      protocol-http2 (~> 0.14.0)
+    async-http-cache (0.3.0)
+      async-http (~> 0.53)
+    async-io (1.31.0)
+      async (~> 1.14)
+    async-pool (0.3.6)
+      async (~> 1.25)
     autoprefixer-rails (9.4.3)
       execjs
     aws-eventstream (1.0.1)
@@ -168,6 +180,7 @@ GEM
       rake
       yajl-ruby
     buftok (0.2.0)
+    build-environment (1.13.0)
     builder (3.2.3)
     bullet (5.9.0)
       activesupport (>= 3.0.0)
@@ -214,6 +227,8 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
+    console (1.12.0)
+      fiber-local
     counter_culture (2.1.2)
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -303,6 +318,18 @@ GEM
       capybara
       sinatra
       webmock
+    falcon (0.36.7)
+      async (~> 1.13)
+      async-container (~> 0.16.0)
+      async-http (~> 0.53.0)
+      async-http-cache (~> 0.3.0)
+      async-io (~> 1.22)
+      build-environment (~> 1.13)
+      bundler
+      localhost (~> 1.1)
+      process-metrics (~> 0.2.0)
+      rack (>= 1.0)
+      samovar (~> 2.1)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     faraday_middleware (0.13.1)
@@ -318,6 +345,7 @@ GEM
       loofah (>= 2.0)
       sax-machine (>= 1.0)
     ffi (1.9.25)
+    fiber-local (1.0.0)
     figaro (1.1.1)
       thor (~> 0.14)
     fission (0.5.0)
@@ -582,12 +610,14 @@ GEM
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
+    localhost (1.1.8)
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.0.13)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
+    mapping (1.1.1)
     memoist (0.16.0)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
@@ -651,6 +681,16 @@ GEM
       ast (~> 2.4.0)
     pg (1.1.4)
     powerpack (0.1.2)
+    process-metrics (0.2.1)
+      console (~> 1.8)
+      samovar (~> 2.1)
+    protocol-hpack (1.4.2)
+    protocol-http (0.21.0)
+    protocol-http1 (0.13.2)
+      protocol-http (~> 0.19)
+    protocol-http2 (0.14.2)
+      protocol-hpack (~> 1.4)
+      protocol-http (~> 0.18)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -660,7 +700,6 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (3.0.3)
-    puma (3.12.0)
     pundit (2.0.1)
       activesupport (>= 3.0.0)
     pundit-matchers (1.6.0)
@@ -798,6 +837,9 @@ GEM
       jquery-rails
       rails
       sass-rails
+    samovar (2.1.4)
+      console (~> 1.0)
+      mapping (~> 1.0)
     sass (3.7.2)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -879,6 +921,7 @@ GEM
     timber (2.6.2)
       msgpack (~> 1.0)
     timecop (0.9.1)
+    timers (4.3.3)
     trollop (2.1.2)
     twilio-ruby (5.21.0)
       faraday (~> 0.9)
@@ -988,11 +1031,11 @@ DEPENDENCIES
   factory_bot_rails (~> 4.11)
   fake_stripe (~> 0.2)
   faker!
+  falcon
   fastly (~> 1.15)
   fastly-rails (~> 0.8)
   feedjira (~> 2.2)
   figaro (~> 1.1)
-  fix-db-schema-conflicts!
   fog (~> 1.41)
   front_matter_parser (~> 0.2)
   gemoji (~> 3.0.0)
@@ -1023,7 +1066,6 @@ DEPENDENCIES
   pry (~> 0.12)
   pry-byebug (~> 3.7)
   pry-rails (~> 0.3)
-  puma (~> 3.12)
   pundit (~> 2.0)
   pundit-matchers (~> 1.6)
   pusher (~> 1.3)

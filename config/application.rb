@@ -7,6 +7,23 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 
 module PracticalDeveloper
+  class EarlyHints
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      if env["PATH_INFO"] == "/"
+        env["rack.early_hints"] ||= []
+        StoriesController::PUSH_IMAGES.each do |name|
+          env["rack.early_hints"].push("/assets/#{name}.svg")
+        end
+      end
+
+      @app.call(env)
+    end
+  end
+
   class Application < Rails::Application
     config.load_defaults 5.1
 
@@ -35,6 +52,7 @@ module PracticalDeveloper
     config.active_job.queue_adapter = :delayed_job
 
     config.middleware.use Rack::Deflater
+    config.middleware.insert_before Rack::Head, EarlyHints
 
     # Globally handle Pundit::NotAuthorizedError by serving 404
     config.action_dispatch.rescue_responses["Pundit::NotAuthorizedError"] = :not_found
