@@ -12,5 +12,10 @@ end
 
 chdir APP_ROOT do
   puts "== STARTING UP =="
-  system! "foreman start -f Procfile.dev"
+  if ENV.fetch('RAILS_ENV', 'development') == 'localproduction'
+    system! "bundle exec rake assets:precompile"
+    system! "foreman start -f Procfile.local_prod"
+  else
+    system! "foreman start -f Procfile.dev"
+  end
 end
