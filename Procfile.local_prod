@@ -1,0 +1,3 @@
+web: RACK_ENV=localproduction PORT=3000 bundle exec puma -C config/puma.rb
+job: bundle exec rake jobs:work
+prometheus_exporter: bundle exec prometheus_exporter
