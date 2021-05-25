@@ -16,7 +16,7 @@ end
 gem "actionpack-action_caching", "~> 1.2"
 gem "active_record_union", "~> 1.3"
 gem "acts-as-taggable-on", "~> 5.0"
-gem "acts_as_follower", github: "thepracticaldev/acts_as_follower", branch: "master"
+gem "acts_as_follower", github: "forem/acts_as_follower", branch: "master"
 gem "addressable", "~> 2.5", ">= 2.5.2"
 gem "administrate", "~> 0.11"
 gem "ahoy_email", "~> 0.5"
@@ -46,6 +46,7 @@ gem "fastly-rails", "~> 0.8"
 gem "feedjira", "~> 2.2"
 gem "figaro", "~> 1.1"
 gem "fog", "~> 1.41"
+gem "foreman"
 gem "front_matter_parser", "~> 0.2"
 gem "gemoji", "~> 3.0.0"
 gem "gibbon", "~> 2.2"
@@ -59,12 +60,14 @@ gem "jquery-rails", "~> 4.3"
 gem "kaminari", "~> 1.1"
 gem "libhoney", "~> 1.11"
 gem "liquid", "~> 4.0"
+gem "newrelic_rpm"
 gem "nokogiri", "~> 1.10"
 gem "octokit", "~> 4.13"
 gem "omniauth", "~> 1.9"
-gem "omniauth-github", "~> 1.3"
+gem "omniauth-github", "~> 1.4"
 gem "omniauth-twitter", "~> 1.4"
 gem "pg", "~> 1.1"
+gem "prometheus_exporter"
 gem "pry", "~> 0.12"
 gem "pry-rails", "~> 0.3"
 gem "puma", "~> 3.12"
@@ -72,6 +75,7 @@ gem "pundit", "~> 2.0"
 gem "pusher", "~> 1.3"
 gem "pusher-push-notifications", "~> 1.0"
 gem "rack-host-redirect", "~> 1.3"
+gem "rack-mini-profiler", require: ["enable_rails_patches"]
 gem "rack-timeout", "~> 0.5"
 gem "rails", "~> 5.1.6"
 gem "rails-assets-airbrake-js-client", "~> 1.5", source: "https://rails-assets.org"
@@ -113,6 +117,7 @@ group :development do
   gem "guard", "~> 2.15", require: false
   gem "guard-livereload", "~> 2.5", require: false
   gem "guard-rspec", "~> 4.7", require: false
+  gem "meta_request"
   gem "rb-fsevent", "~> 0.10", require: false
   gem "web-console", "~> 3.7"
 end
@@ -122,7 +127,8 @@ group :development, :test do
   gem "derailed", "~> 0.1"
   gem "erb_lint", "~> 0.0", require: false
   gem "faker", git: "https://github.com/stympy/faker.git", branch: "master"
-  gem "fix-db-schema-conflicts", github: "thepracticaldev/fix-db-schema-conflicts", branch: "master"
+  # gem "fix-db-schema-conflicts", github: "thepracticaldev/fix-db-schema-conflicts", branch: "master"
+  gem "fix-db-schema-conflicts", github: "jakeonrails/fix-db-schema-conflicts", branch: "master"
   gem "memory_profiler", "~> 0.9"
   gem "parallel_tests", "~> 2.27"
   gem "pry-byebug", "~> 3.7"
@@ -132,6 +138,7 @@ group :development, :test do
   gem "rubocop-rspec", "~> 1.31"
   gem "spring", "~> 2.0"
   gem "spring-commands-rspec", "~> 1.0"
+  gem "stackprof", "~> 0.2", require: false, platforms: :ruby
   gem "vcr", "~> 4.0"
 end
 
@@ -149,7 +156,6 @@ group :test do
   gem "shoulda-matchers", "4.0.0.rc1", require: false
   gem "simplecov", "~> 0.16", require: false
   gem "sinatra", "~> 2.0"
-  gem "stackprof", "~> 0.2", require: false, platforms: :ruby
   gem "stripe-ruby-mock", "~> 2.5", require: "stripe_mock"
   gem "test-prof", "~> 0.7"
   gem "timecop", "~> 0.9"

@@ -52,4 +52,5 @@ package-lock.json
 .idea/
 
 #sitemap
-/public/sitemap.xml.gz
+/vendor/nginx/certs/
+!/vendor/nginx/certs/.keep
