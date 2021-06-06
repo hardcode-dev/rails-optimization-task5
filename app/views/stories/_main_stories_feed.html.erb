@@ -50,12 +50,14 @@
     </div>
   <% end %>
 <% else %>
-  <% @stories.each_with_index do |story, i| %>
-    <% next if story.id == @featured_story.id %>
-    <% if !user_signed_in? && i == 4 %>
-      <%= render "stories/sign_in_invitation" %>
+  <% cache("_main_stories_feed_-_stories_each") do %>
+    <% @stories.each_with_index do |story, i| %>
+      <% next if story.id == @featured_story.id %>
+      <% if !user_signed_in? && i == 4 %>
+        <%= render "stories/sign_in_invitation" %>
+      <% end %>
+      <%= render "articles/single_story", story: story %>
     <% end %>
-    <%= render "articles/single_story", story: story %>
   <% end %>
 <% end %>
 <% if @stories.size > 1 %>

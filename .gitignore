@@ -40,6 +40,7 @@ latest.dump
 /public/packs-test
 /node_modules
 config/database.yml
+config/application.yml
 
 # Ignore storybook static site generation
 storybook-static/
