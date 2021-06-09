@@ -10,7 +10,7 @@
 
 - установил `nginx` локально
   - сначала хотел сделать через `docker-compose`, но столкнулся с проблемой сети
-    ```bigquery
+    ```
     reverse    | 2021/06/09 18:19:30 [error] 24#24: *7 connect() failed (111: Connection refused) while connecting to upstream, client: 172.19.0.1, server: localhost, request: "GET / HTTP/2.0", upstream: "http://127.0.0.1:3000/", host: "127.0.0.1"
     reverse    | 2021/06/09 18:19:30 [warn] 24#24: *7 upstream server temporarily disabled while connecting to upstream, client: 172.19.0.1, server: localhost, request: "GET / HTTP/2.0", upstream: "http://127.0.0.1:3000/", host: "127.0.0.1"
     reverse    | 2021/06/09 18:19:30 [error] 24#24: *7 connect() failed (111: Connection refused) while connecting to upstream, client: 172.19.0.1, server: localhost, request: "GET / HTTP/2.0", upstream: "http://127.0.0.1:3000/", host: "127.0.0.1"
@@ -19,3 +19,8 @@
     ```
 - скопировал конфиг `local.conf`
 - заработал `https://localhost`
+
+### Шаг 3. Настроить HTTP/2 и server-push
+
+- обновил local.conf
+- все заработало
