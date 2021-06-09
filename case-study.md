@@ -30,3 +30,9 @@
 ### 5.2. Анализ с server-push
 
 `report/browsertime_with_push.har`
+
+### 5.3 Сравнение результатов
+
+[Ссылка на сравнение HAR-файлов](https://compare.sitespeed.io/?har1=https://raw.githubusercontent.com/avbelyshev/rails-optimization-task5/master/report/browsertime_without_push.har&har2=https://raw.githubusercontent.com/avbelyshev/rails-optimization-task5/master/report/browsertime_with_push.har)
+
+С server-push время загрузки страницы уменьшилось, запушенные картинки стали загружаться раньше остального контента.
