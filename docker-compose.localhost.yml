@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx
+#    ports:
+#      - 80:80
+#      - 443:443
+    network_mode: host
+    volumes:
+      - ./certs/:/etc/ssl/private
+      - ./local.conf:/etc/nginx/conf.d/local.conf

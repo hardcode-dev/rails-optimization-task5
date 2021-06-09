@@ -148,6 +148,8 @@ variable :TRENDING_TAGS, :String, default: "git,beginners"
 variable :FACEBOOK_PIXEL_ID, :String, default: "Optional"
 variable :SMARTY_STREETS_WEB_KEY, :String, default: "Optional"
 
+###### SkyLighth env vars ######
+variable :SKYLIGHT_AUTHENTICATION, :String, default: "Optional"
 
 group :production do
   variable :SECRET_KEY_BASE, :String
