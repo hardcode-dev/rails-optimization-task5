@@ -20,3 +20,13 @@
 
 Загрузка страницы после включения server-push:
 ![scr03.png](report/scr03.png)
+
+### Шаг 5. Измерение эффекта сделанных изменений
+
+### 5.1 Анализ без server-push
+
+`report/browsertime_without_push.har`
+
+### 5.2. Анализ с server-push
+
+`report/browsertime_with_push.har`
