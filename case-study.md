@@ -35,7 +35,7 @@ Samba
 
 Конфигурируем **NGinx** так, чтобы он принимал `https`-запросы `https://localhost` и ходил в `upstream` на `http://localhost:3000`. Конфигурационный файл сервиса должен находиться по адресу `/etc/nginx/conf.d/default.conf` со следующим содержимым.
 
-```
+```conf
 server {
   listen       443 ssl;
   server_name  localhost;
@@ -56,9 +56,30 @@ server {
   }
 }
 ```
+Здесь модет понадобиться открытие прав доступа к папке на добавление и редактирование данных
+```bash
+$ cd /etc/nginx
+$ sudo chown -R $(logname):$(logname) conf.d
+```
 
 После настроки конфигурационного файла включаем сервис `sudo service nginx  start`
 
 На этом шаге браузер должен успешно открывать `https://localhost`
 
 Если запуск сервиса **Nginx** сопровождается предупреждением об ошибке, то можно воспользоваться командой `systemctl status nginx.service`, чтобы получить подробную информацию о природе ошибки.
+
+### Шаг 3. Настроить HTTP/2 и server-push
+
+Дополняем конфигурационный файл **NGinx** `/etc/nginx/conf.d/default.conf`  поддержкой `HTTP/2` и `server-push`
+
+```
+server {
+  listen  443 http2 ssl;
+  #...
+
+  location /{
+    http2_push_preload on;
+    #...
+  }
+}
+```
