@@ -83,3 +83,35 @@ server {
   }
 }
 ```
+
+### Шаг 4. Поэксперементировать с HTTP/2 server-push
+
+![inline_svg](https://github.com/rubygitflow/rails-optimization-task5/raw/profiler5/sitespeed-result/inline_svg_2021-06-29_20-23-23.png)
+
+![image_tag](https://github.com/rubygitflow/rails-optimization-task5/raw/profiler5/sitespeed-result/image_tag_2021-06-29_20-25-23.png)
+
+![without inline_svg and server-push](https://github.com/rubygitflow/rails-optimization-task5/raw/profiler5/sitespeed-result/without_inline_svg_server-push_2021-06-29_20-27-23.png)
+
+
+### Шаг 5. Измерение эффекта сделанных изменений
+
+Варианты сайта с `server-push` и с обычными картинками без инлайнинга и без пуша запускаем в сети:
+```bash
+./ngrok http 80
+```
+
+и анализируем с помощью инструмента:
+```bash
+docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io --mobile -n 5 --preUrl https://host.docker.internal/ https://host.docker.internal/
+```
+
+
+**Результаты сравнительного анализа**
+
+`sitespeed-result/3142d305bf28.ngrok.io/2021-06-29-18-09-06_without_server-push/index.html`
+
+`sitespeed-result/3142d305bf28.ngrok.io/2021-06-29-18-17-46_with_server-push/index.html`
+
+**в файле**
+
+'sitespeed-result/29.06.2021,21_09_09_without_VS_29.06.2021,21_17_48_with.html'

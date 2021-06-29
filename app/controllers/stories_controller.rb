@@ -1,6 +1,7 @@
 class StoriesController < ApplicationController
   before_action :authenticate_user!, except: %i[index search show feed new]
   before_action :set_cache_control_headers, only: %i[index search show]
+  before_action :set_response_header_link, only: %i[index]
 
   def index
     add_param_context(:username, :tag)
@@ -39,6 +40,18 @@ class StoriesController < ApplicationController
   end
 
   private
+
+  def set_response_header_link
+    push_headers = [
+      "<#{view_context.asset_path('bell.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('menu.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('connect.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('stack.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('lightning.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('devplain.svg')}>; rel=preload; as=image",
+    ]
+    response.headers['Link'] = push_headers.join(', ')
+  end
 
   def redirect_to_changed_username_profile
     potential_username = params[:username].tr("@", "").downcase
