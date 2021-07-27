@@ -1,4 +1,4 @@
-class CreateMentorRelationships < ActiveRecord::Migration[5.1]
+class CreateMentorRelationships < ActiveRecord::Migration[4.2][5.1]
   def change
     create_table :mentor_relationships do |t|
       t.integer :mentor_id, null: false

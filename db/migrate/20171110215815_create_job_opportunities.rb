@@ -1,4 +1,4 @@
-class CreateJobOpportunities < ActiveRecord::Migration[5.1]
+class CreateJobOpportunities < ActiveRecord::Migration[4.2][5.1]
   def change
     create_table :job_opportunities do |t|
       t.string :remoteness

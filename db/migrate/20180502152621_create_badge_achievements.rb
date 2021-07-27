@@ -1,4 +1,4 @@
-class CreateBadgeAchievements < ActiveRecord::Migration[5.1]
+class CreateBadgeAchievements < ActiveRecord::Migration[4.2][5.1]
   def change
     create_table :badge_achievements do |t|
       t.references :user, foreign_key: true, null: false

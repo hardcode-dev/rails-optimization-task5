@@ -1,4 +1,4 @@
-class UpdateFeedbackMessagesTable < ActiveRecord::Migration[5.1]
+class UpdateFeedbackMessagesTable < ActiveRecord::Migration[4.2][5.1]
   def change
     remove_column :feedback_messages, :last_reviewed_at, :datetime
     remove_column :feedback_messages, :offender_email_sent?, :boolean

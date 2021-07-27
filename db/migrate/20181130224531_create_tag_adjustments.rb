@@ -1,4 +1,4 @@
-class CreateTagAdjustments < ActiveRecord::Migration[5.1]
+class CreateTagAdjustments < ActiveRecord::Migration[4.2][5.1]
   def change
     create_table :tag_adjustments do |t|
       t.integer   :user_id

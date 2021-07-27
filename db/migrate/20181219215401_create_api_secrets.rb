@@ -1,4 +1,4 @@
-class CreateApiSecrets < ActiveRecord::Migration[5.1]
+class CreateApiSecrets < ActiveRecord::Migration[4.2][5.1]
   def change
     create_table :api_secrets do |t|
       t.string :secret

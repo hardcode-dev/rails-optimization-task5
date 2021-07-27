@@ -1,4 +1,4 @@
-class ChangeLastModerationNotificationDefaultOnUser < ActiveRecord::Migration[5.1]
+class ChangeLastModerationNotificationDefaultOnUser < ActiveRecord::Migration[4.2][5.1]
   def up
     change_column_default :users, :last_moderation_notification, Time.new("2017-01-01")
   end

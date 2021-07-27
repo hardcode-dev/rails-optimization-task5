@@ -1,4 +1,4 @@
-class CreateFlipflopFeatures < ActiveRecord::Migration[5.1]
+class CreateFlipflopFeatures < ActiveRecord::Migration[4.2][5.1]
   def change
     create_table :flipflop_features do |t|
       t.string :key, null: false

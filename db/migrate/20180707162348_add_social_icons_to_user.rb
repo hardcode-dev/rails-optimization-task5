@@ -1,4 +1,4 @@
-class AddSocialIconsToUser < ActiveRecord::Migration[5.1]
+class AddSocialIconsToUser < ActiveRecord::Migration[4.2][5.1]
   def change
     add_column :users, :facebook_url, :string
     add_column :users, :stackoverflow_url, :string
