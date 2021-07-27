@@ -18,12 +18,26 @@ services:
   jobs:
     ports: []
     <<: *rails_base
-    command: rails jobs:work
+    command: rails jobs:work 
   webpacker:
     ports: []
     <<: *rails_base
     command: ./bin/webpack-dev-server
   db:
     image: postgres
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
     ports:
-    - "5432:5432"
+      - "5432:5432"
+      
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/content:/usr/share/nginx/html
+      - ./certs:/etc/nginx/certs
+    ports: 
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
