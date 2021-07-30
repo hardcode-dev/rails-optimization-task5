@@ -15,6 +15,8 @@
 + class AddAliasForToTags < ActiveRecord::Migration[4.2]
 ```
 
+Но в итоге, проект в Docker запустил.
+
 ### Шаг 1. Настроить сертификат для локального HTTPS
 
 Сгенерировал локальный сертификат с помощью `mkcert`.
