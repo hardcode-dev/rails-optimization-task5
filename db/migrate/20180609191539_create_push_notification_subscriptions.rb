@@ -1,4 +1,4 @@
-class CreatePushNotificationSubscriptions < ActiveRecord::Migration[5.1]
+class CreatePushNotificationSubscriptions < ActiveRecord::Migration[4.2][5.1]
   def change
     create_table :push_notification_subscriptions do |t|
       t.string :endpoint

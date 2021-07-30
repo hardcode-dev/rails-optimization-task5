@@ -1,4 +1,4 @@
-class AddExportFieldsToUsers < ActiveRecord::Migration[5.1]
+class AddExportFieldsToUsers < ActiveRecord::Migration[4.2][5.1]
   def change
     add_column :users, :export_requested, :boolean, default: false
     add_column :users, :exported_at, :datetime

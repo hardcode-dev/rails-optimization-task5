@@ -1,4 +1,4 @@
-class AddColumnsToFeedbackMessages < ActiveRecord::Migration[5.1]
+class AddColumnsToFeedbackMessages < ActiveRecord::Migration[4.2][5.1]
   def change
     add_column :feedback_messages, :created_at, :datetime
     add_column :feedback_messages, :updated_at, :datetime

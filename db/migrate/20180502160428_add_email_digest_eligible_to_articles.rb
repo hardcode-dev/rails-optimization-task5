@@ -1,4 +1,4 @@
-class AddEmailDigestEligibleToArticles < ActiveRecord::Migration[5.1]
+class AddEmailDigestEligibleToArticles < ActiveRecord::Migration[4.2][5.1]
   def change
     add_column :articles, :email_digest_eligible, :boolean, default: true
   end

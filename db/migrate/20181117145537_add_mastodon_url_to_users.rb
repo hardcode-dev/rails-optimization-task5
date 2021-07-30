@@ -1,4 +1,4 @@
-class AddMastodonUrlToUsers < ActiveRecord::Migration[5.1]
+class AddMastodonUrlToUsers < ActiveRecord::Migration[4.2][5.1]
   def change
     add_column :users, :mastodon_url, :string
   end

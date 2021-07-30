@@ -1,4 +1,4 @@
-class AddBoostedToArticles < ActiveRecord::Migration[5.1]
+class AddBoostedToArticles < ActiveRecord::Migration[4.2][5.1]
   def change
     add_column :articles, :boosted, :boolean, default: false
   end

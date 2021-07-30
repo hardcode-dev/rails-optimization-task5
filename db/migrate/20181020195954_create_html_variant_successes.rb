@@ -1,4 +1,4 @@
-class CreateHtmlVariantSuccesses < ActiveRecord::Migration[5.1]
+class CreateHtmlVariantSuccesses < ActiveRecord::Migration[4.2][5.1]
   def change
     create_table :html_variant_successes do |t|
       t.integer     :html_variant_id

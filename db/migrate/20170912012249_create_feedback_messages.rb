@@ -1,4 +1,4 @@
-class CreateFeedbackMessages < ActiveRecord::Migration[5.1]
+class CreateFeedbackMessages < ActiveRecord::Migration[4.2][5.1]
   def change
     create_table :feedback_messages do |t|
       t.text :message

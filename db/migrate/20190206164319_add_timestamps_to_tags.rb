@@ -1,4 +1,4 @@
-class AddTimestampsToTags < ActiveRecord::Migration[5.1]
+class AddTimestampsToTags < ActiveRecord::Migration[4.2][5.1]
   def change
     add_column :tags, :created_at, :datetime
     add_column :tags, :updated_at, :datetime

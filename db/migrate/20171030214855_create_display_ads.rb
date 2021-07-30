@@ -1,4 +1,4 @@
-class CreateDisplayAds < ActiveRecord::Migration[5.1]
+class CreateDisplayAds < ActiveRecord::Migration[4.2][5.1]
   def change
     create_table :display_ads do |t|
       t.integer :organization_id

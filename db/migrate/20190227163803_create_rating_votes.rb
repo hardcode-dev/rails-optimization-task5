@@ -1,4 +1,4 @@
-class CreateRatingVotes < ActiveRecord::Migration[5.1]
+class CreateRatingVotes < ActiveRecord::Migration[4.2][5.1]
   def change
     create_table :rating_votes do |t|
       t.bigint   :user_id

@@ -1,4 +1,4 @@
-class AddColumnsToNotifications < ActiveRecord::Migration[5.1]
+class AddColumnsToNotifications < ActiveRecord::Migration[4.2][5.1]
   def change
     add_index :notifications, :notifiable_id
     add_index :notifications, :user_id

@@ -2,7 +2,7 @@ p "1/9 Creating Organizations"
 
 3.times do
   Organization.create!(
-    name: Faker::SiliconValley.company,
+    name: Faker::TvShows::SiliconValley.company,
     summary: Faker::Company.bs,
     remote_profile_image_url: logo = Faker::Company.logo,
     nav_image: logo,
@@ -19,13 +19,12 @@ end
 
 p "2/9 Creating Users"
 
-roles = %i[level_1_member level_2_member level_3_member level_4_member
-           workshop_pass]
+roles = %i[level_1_member level_2_member level_3_member level_4_member workshop_pass]
 User.clear_index!
 10.times do |i|
   user = User.create!(
-    name: name = Faker::Name.unique.name,
-    summary: Faker::Lorem.paragraph_by_chars(199, false),
+    name: name = Faker::Name.unique.name[1..99],
+    summary: Faker::Lorem.paragraph_by_chars(number:199, supplemental:false),
     profile_image: File.open("#{Rails.root}/app/assets/images/#{rand(1..40)}.png"),
     website_url: Faker::Internet.url,
     twitter_username: Faker::Internet.username(name),
@@ -36,7 +35,8 @@ User.clear_index!
     password: "password",
   )
 
-  user.add_role(roles[rand(0..5)]) # includes chance of having no role
+  # в этом месте периодически падало на валидации Name is not included in the list
+  user.add_role(roles[rand(0..4)]) # includes chance of having no role
 
   Identity.create!(
     provider: "twitter",
@@ -129,7 +129,7 @@ podcast_objects = [
     main_color_hex: "111111",
     overcast_url: "https://overcast.fm/itunes769189585/coding-blocks-software-and-web-programming-security-best-practices-microsoft-net", # rubocop:disable Metrics/LineLength
     android_url: "http://subscribeonandroid.com/feeds.podtrac.com/c8yBGHRafqhz",
-    image: Rack::Test::UploadedFile.new(image_file, "image/jpeg")
+    #image: Rack::Test::UploadedFile.new(image_file, "image/jpeg")
   },
   {
     title: "Talk Python",
@@ -141,7 +141,7 @@ podcast_objects = [
     main_color_hex: "181a1c",
     overcast_url: "https://overcast.fm/itunes979020229/talk-python-to-me-python-conversations-for-passionate-developers", # rubocop:disable Metrics/LineLength
     android_url: "https://subscribeonandroid.com/talkpython.fm/episodes/rss",
-    image: Rack::Test::UploadedFile.new(image_file, "image/jpeg")
+    #image: Rack::Test::UploadedFile.new(image_file, "image/jpeg")
   },
   {
     title: "Developer on Fire",
@@ -154,7 +154,7 @@ podcast_objects = [
     main_color_hex: "",
     overcast_url: "https://overcast.fm/itunes1006105326/developer-on-fire",
     android_url: "http://subscribeonandroid.com/developeronfire.com/rss.xml",
-    image: Rack::Test::UploadedFile.new(image_file, "image/jpeg")
+    #image: Rack::Test::UploadedFile.new(image_file, "image/jpeg")
   },
   {
     title: "Building Programmers",
@@ -167,7 +167,7 @@ podcast_objects = [
     main_color_hex: "140837",
     overcast_url: "https://overcast.fm/itunes1149043456/building-programmers",
     android_url: "https://subscribeonandroid.com/building.fireside.fm/rss",
-    image: Rack::Test::UploadedFile.new(image_file, "image/jpeg")
+    #image: Rack::Test::UploadedFile.new(image_file, "image/jpeg")
   },
 ]
 

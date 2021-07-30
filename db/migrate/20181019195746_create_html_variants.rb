@@ -1,4 +1,4 @@
-class CreateHtmlVariants < ActiveRecord::Migration[5.1]
+class CreateHtmlVariants < ActiveRecord::Migration[4.2][5.1]
   def change
     create_table :html_variants do |t|
       t.integer   :user_id

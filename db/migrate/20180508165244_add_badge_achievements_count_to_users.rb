@@ -1,4 +1,4 @@
-class AddBadgeAchievementsCountToUsers < ActiveRecord::Migration[5.1]
+class AddBadgeAchievementsCountToUsers < ActiveRecord::Migration[4.2][5.1]
   def self.up
     add_column :users, :badge_achievements_count, :integer, null: false, default: 0
     add_column :users, :email_badge_notifications, :boolean, default: true

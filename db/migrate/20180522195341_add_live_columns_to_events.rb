@@ -1,4 +1,4 @@
-class AddLiveColumnsToEvents < ActiveRecord::Migration[5.1]
+class AddLiveColumnsToEvents < ActiveRecord::Migration[4.2][5.1]
   def change
     add_column :events, :live_now, :boolean, default: false
     add_column :events, :profile_image, :string
