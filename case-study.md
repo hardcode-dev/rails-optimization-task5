@@ -12,76 +12,14 @@
 
 ### Шаг 3. Настроить HTTP/2 и server-push
 
-Дополняем конфиг `NGinx` поддержкой `HTTP/2` и `server-push`
-
-```
-server {
-  listen  443 http2 ssl;
-  #...
-
-  location /{
-    http2_push_preload on;
-    #...
-  }
-}
-```
+Дополнил конфиг `NGinx` поддержкой `HTTP/2` и `server-push`
 
 ### Шаг 4. Поэксперементировать с HTTP/2 server-push
 
-На главном экране в мобильном виде `dev.to` есть ряд картинок:
-
-- `connect.svg`
-- `bell.svg`
-- `menu.svg`
-- `stack.svg`
-- `lightning.svg`
-
-![Screenshot](https://github.com/spajic/task-5/blob/master/screenshot.png?raw=true)
-
-Картинки из меню: `connect.svg`, `bell.svg`, `menu.svg` – заинлайнены.
-Картинки `stack.svg` и `lightning.svg` – нет.
-
-Попробуйте перезагружать эту страницу с эмуляцией медленного соединения и посмотреть как рендерятся эти картинки при перезагрузке.
-
-Дальше, давайте попробуем двинуться в сторону подхода `HTTP/2` и не будем инлайнить `svg`, а подключим их как обычные картинки.
-
-Например, `image_tag("bell.svg", size: "100% * 100%")`
-
-Теперь давайте добавим `server-push`!
-
-Для этого нам нужно установить специальные заголовки:
-
-```
-# stories_controller.rb
-def index
-  push_headers = [
-    "<#{view_context.asset_path('bell.svg')}>; rel=preload; as=image",
-    "<#{view_context.asset_path('menu.svg')}>; rel=preload; as=image",
-    "<#{view_context.asset_path('connect.svg')}>; rel=preload; as=image",
-    "<#{view_context.asset_path('stack.svg')}>; rel=preload; as=image",
-    "<#{view_context.asset_path('lightning.svg')}>; rel=preload; as=image",
-  ]
-  response.headers['Link'] = push_headers.join(', ')
-  # ...
-end
-```
-
-На этом шаге нужно убедиться, что `server-push` работает.
-
-В `Chrome` `DevTools` в панели `Network` вы должны увидеть, что запросы к этим картинкам делаются по протоколу `h2`, а `Initiator` = `Push/Other`
-
-Ещё один способ проверить работу `server-push` - утилита `http2-push-detect`
-
-```
-http2-push-detect https://localhost
-Receiving pushed resource: /assets/bell.svg
-Receiving pushed resource: /assets/menu.svg
-Receiving pushed resource: /assets/connect.svg
-Receiving pushed resource: /assets/stack.svg
-Receiving pushed resource: /assets/lightning.svg
-```
-
-Теперь поэксперементируйте, попробуйте включать и выключать `server-push` для тех или иных картинок и оцените, как это сказывается на их рендеринге.
+До `server-push`
+![before_push.png](cs_docs/before_push.png)
+После `server-push`
+![after_push.png](cs_docs/after_push.png)
 
 ### Шаг 5. Измерение эффекта сделанных изменений
 
