@@ -56,3 +56,7 @@ package-lock.json
 
 # gemset
 .ruby-gemset
+
+# certs
+/nginx/certs/*
+!nginx/certs/.keep
