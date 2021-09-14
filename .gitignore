@@ -53,3 +53,13 @@ package-lock.json
 
 #sitemap
 /public/sitemap.xml.gz
+
+# gemset
+.ruby-gemset
+
+# certs
+/nginx/certs/*
+!nginx/certs/.keep
+
+# sitespeed files
+/sitespeed-result
