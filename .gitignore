@@ -60,3 +60,6 @@ package-lock.json
 # certs
 /nginx/certs/*
 !nginx/certs/.keep
+
+# sitespeed files
+/sitespeed-result
