@@ -1,0 +1,3 @@
+siege -c 10 -t30s -f load_scripts/siege.txt
+
+ab -n 50 http://127.0.0.1:3000/
