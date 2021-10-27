@@ -125,6 +125,7 @@ group :development, :test do
   gem "faker", git: "https://github.com/stympy/faker.git", branch: "master"
   # gem "fix-db-schema-conflicts", github: "thepracticaldev/fix-db-schema-conflicts", branch: "master"
   gem "fix-db-schema-conflicts", github: "jakeonrails/fix-db-schema-conflicts", branch: "master"
+  
   gem "memory_profiler", "~> 0.9"
   gem "parallel_tests", "~> 2.27"
   gem "pry-byebug", "~> 3.7"
