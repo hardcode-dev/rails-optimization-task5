@@ -3,6 +3,11 @@ class StoriesController < ApplicationController
   before_action :set_cache_control_headers, only: %i[index search show]
 
   def index
+    push_headers = %w[bell.svg menu.svg connect.svg stack.svg lightning.svg].map do |image_path|
+      "<#{view_context.asset_path(image_path)}>; rel=preload; as=image"
+    end.join(", ")
+    response.headers["Link"] = push_headers
+
     add_param_context(:username, :tag)
     return handle_user_or_organization_or_podcast_index if params[:username]
     return handle_tag_index if params[:tag]
