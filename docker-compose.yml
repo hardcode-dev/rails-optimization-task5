@@ -9,8 +9,8 @@ services:
     depends_on:
       - db
     environment:
-      RAILS_ENV: development
-      DATABASE_URL: postgres://postgres:mysecretpassword@db:5432/postgres
+      RAILS_ENV: ${RAILS_ENV:-development}
+      DATABASE_URL: postgres://postgres:password@db:5432/postgres
       YARN_INTEGRITY_ENABLED: "false"
     volumes:
       - .:/usr/src/app
@@ -24,6 +24,24 @@ services:
     <<: *rails_base
     command: ./bin/webpack-dev-server
   db:
-    image: postgres
+    image: postgres:9.6-alpine
     ports:
-    - "5432:5432"
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./tmp/postgres_data:/var/lib/postgresql/data
+  nginx:
+    image: nginx:latest
+    container_name: dev_nginx
+    networks:
+      default:
+        aliases:
+          - host-gateway
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/certs:/etc/nginx/certs
+    ports:
+      - 443:443
+    environment:
+      RAILS_PORT: ${RAILS_PORT:-3000}
