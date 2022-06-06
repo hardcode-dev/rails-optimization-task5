@@ -7,20 +7,12 @@ GIT
       i18n (>= 0.7)
 
 GIT
-  remote: https://github.com/thepracticaldev/acts_as_follower.git
-  revision: 288690cd99bc470eaee493fce5bfa9fe23157692
+  remote: https://github.com/tcocca/acts_as_follower.git
+  revision: c5ac7b9601c4af01eb4d9112330b27be4d694ecc
   branch: master
   specs:
     acts_as_follower (0.2.1)
       activerecord (>= 4.0)
-
-GIT
-  remote: https://github.com/thepracticaldev/fix-db-schema-conflicts.git
-  revision: 4172392392e1a8d907f7ab673cb5ddd9a4a31940
-  branch: master
-  specs:
-    fix-db-schema-conflicts (3.0.2)
-      rubocop (>= 0.38.0)
 
 GEM
   remote: https://rubygems.org/
@@ -322,6 +314,8 @@ GEM
       thor (~> 0.14)
     fission (0.5.0)
       CFPropertyList (~> 2.2)
+    fix-db-schema-conflicts (3.1.0)
+      rubocop (>= 0.38.0)
     fog (1.41.0)
       fog-aliyun (>= 0.1.0)
       fog-atmos
@@ -992,7 +986,7 @@ DEPENDENCIES
   fastly-rails (~> 0.8)
   feedjira (~> 2.2)
   figaro (~> 1.1)
-  fix-db-schema-conflicts!
+  fix-db-schema-conflicts
   fog (~> 1.41)
   front_matter_parser (~> 0.2)
   gemoji (~> 3.0.0)
