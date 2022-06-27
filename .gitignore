@@ -50,6 +50,7 @@ package-lock.json
 
 #Jetbrains Tools
 .idea/
-
+crt
+sitespeed-result
 #sitemap
 /public/sitemap.xml.gz
