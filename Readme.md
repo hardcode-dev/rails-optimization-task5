@@ -6,9 +6,9 @@
 
 Польза:
 
-- научиться настраивать `HTTPS` для локального `Rails`-приложения
-- научиться настраивать `HTTP/2` `reverse proxy` с поддержкой `server-push`
-- научиться делать `server-push`, сравнить его с `inlining`
+- [+] научиться настраивать `HTTPS` для локального `Rails`-приложения
+- [+] научиться настраивать `HTTP/2` `reverse proxy` с поддержкой `server-push`
+- [+] научиться делать `server-push`, сравнить его с `inlining`
 
 ## ToDo
 
@@ -175,7 +175,6 @@ docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io --mobile -n 5
 - [x] Ссылка на сравнение `HAR`-файлов с `server-push` и без
 - [ ] Бонус 1 про `dev.to`
 - [ ] Бонус 2 про `Falcon`
-
 
 ## Bonus 1. Аудит dev.to
 
