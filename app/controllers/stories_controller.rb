@@ -7,6 +7,18 @@ class StoriesController < ApplicationController
     return handle_user_or_organization_or_podcast_index if params[:username]
     return handle_tag_index if params[:tag]
 
+    push_headers = [
+      "<#{view_context.asset_path('bell.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('menu.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('connect.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('stack.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('lightning.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('devplain.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('sloan.png')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('twitter-logo.svg')}>; rel=preload; as=image",
+      "<#{view_context.asset_path('github-logo.svg')}>; rel=preload; as=image",
+    ]
+    response.headers["Link"] = push_headers.join(", ")
     handle_base_index
   end
 
