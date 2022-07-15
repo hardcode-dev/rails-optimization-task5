@@ -35,11 +35,12 @@ latest.dump
 .gitdocs_build/
 
 # Ignore application configuration
-/config/application.yml
+config/application.yml
+config/database.yml
+config/secrets.yml
 /public/packs
 /public/packs-test
 /node_modules
-config/database.yml
 
 # Ignore storybook static site generation
 storybook-static/
@@ -48,8 +49,10 @@ yarn-error.log
 # Ignore package-lock.json because we use yarn
 package-lock.json
 
-#Jetbrains Tools
 .idea/
+.vscode
 
 #sitemap
 /public/sitemap.xml.gz
+
+sitespeed-result/

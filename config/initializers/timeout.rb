@@ -1,4 +1,4 @@
-if Rails.env.development? && ENV["RACK_TIMEOUT_WAIT_TIMEOUT"].nil?
+if (Rails.env.development? || Rails.env.local_production?) && ENV["RACK_TIMEOUT_WAIT_TIMEOUT"].nil?
   ENV["RACK_TIMEOUT_WAIT_TIMEOUT"] = "100000"
   ENV["RACK_TIMEOUT_SERVICE_TIMEOUT"] = "100000"
 end

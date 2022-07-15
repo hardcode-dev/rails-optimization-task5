@@ -33,6 +33,7 @@ chdir APP_ROOT do
   # This solution was found here https://github.com/rails/rails/issues/26731#issuecomment-302446525
   # This line is to remove manual need to run a separate manual migration upon calling rspec
   system! "RAILS_ENV=test bin/rails db:environment:set"
+  system! "RAILS_ENV=local_production bin/rails db:environment:set"
 
   puts "\n== Removing old logs and tempfiles =="
   system! "bin/rails log:clear tmp:clear"
