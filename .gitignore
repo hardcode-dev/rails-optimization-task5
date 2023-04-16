@@ -53,3 +53,7 @@ package-lock.json
 
 #sitemap
 /public/sitemap.xml.gz
+
+/nginx/certs/*
+/sitespeed-result/host.docker.internal/**/*
+/sitespeed-result/www.sitespeed.io/**/*

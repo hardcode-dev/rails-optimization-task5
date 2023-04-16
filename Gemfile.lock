@@ -1,26 +1,26 @@
 GIT
-  remote: https://github.com/stympy/faker.git
-  revision: 9910aa58d92c018abab25d491191576fcc1a7707
-  branch: master
-  specs:
-    faker (1.9.1)
-      i18n (>= 0.7)
-
-GIT
-  remote: https://github.com/thepracticaldev/acts_as_follower.git
-  revision: 288690cd99bc470eaee493fce5bfa9fe23157692
+  remote: https://github.com/forem/acts_as_follower.git
+  revision: 06393d3693a1a3d4b390aec4976c8b8f3a81cf01
   branch: master
   specs:
     acts_as_follower (0.2.1)
       activerecord (>= 4.0)
 
 GIT
-  remote: https://github.com/thepracticaldev/fix-db-schema-conflicts.git
-  revision: 4172392392e1a8d907f7ab673cb5ddd9a4a31940
+  remote: https://github.com/jakeonrails/fix-db-schema-conflicts.git
+  revision: 1e94f518503f1d1addd6ed052454efcbec0b3c6a
   branch: master
   specs:
-    fix-db-schema-conflicts (3.0.2)
+    fix-db-schema-conflicts (3.1.0)
       rubocop (>= 0.38.0)
+
+GIT
+  remote: https://github.com/stympy/faker.git
+  revision: 9910aa58d92c018abab25d491191576fcc1a7707
+  branch: master
+  specs:
+    faker (1.9.1)
+      i18n (>= 0.7)
 
 GEM
   remote: https://rubygems.org/
@@ -843,10 +843,6 @@ GEM
       tilt (~> 2.0)
     sitemap_generator (6.0.2)
       builder (~> 3.0)
-    skylight (3.1.4)
-      skylight-core (= 3.1.4)
-    skylight-core (3.1.4)
-      activesupport (>= 4.2.0)
     slack-notifier (2.3.2)
     smart_properties (1.13.1)
     spring (2.0.2)
@@ -1057,7 +1053,6 @@ DEPENDENCIES
   simplecov (~> 0.16)
   sinatra (~> 2.0)
   sitemap_generator (~> 6.0)
-  skylight (~> 3.1)
   slack-notifier (~> 2.3)
   spring (~> 2.0)
   spring-commands-rspec (~> 1.0)
@@ -1082,7 +1077,7 @@ DEPENDENCIES
   zonebie (~> 0.6.1)
 
 RUBY VERSION
-   ruby 2.6.1p33
+   ruby 2.6.3p62
 
 BUNDLED WITH
    1.17.3
