@@ -33,7 +33,7 @@
     <div class="on-page-nav-controls" id="on-page-nav-controls">
       <div class="on-page-nav-label">
         <div class="wide-nav-links">
-          <a class="nav-chronofiter-link <%= "selected" if ["week", "month", "year", "infinity", "latest"].exclude?(params[:timeframe]) %>" href="<%= list_path %>/">
+          <a class="nav-chronofiter-link <%= "selected" if %w[week month year infinity latest].exclude?(params[:timeframe]) %>" href="<%= list_path %>/">
             FEED
           </a>
           <span class="separator"></span>
@@ -71,10 +71,10 @@
         </div>
       </div>
       <button class="on-page-nav-butt on-page-nav-butt-left" id="on-page-nav-butt-left" aria-label="nav-button-left">
-        <img src="<%= asset_path "stack.svg" %>" alt="left-sidebar-nav">
+        <%= image_tag("stack.svg", size: "100% * 100%", alt: "left-sidebar-nav") %>
       </button>
       <button class="on-page-nav-butt on-page-nav-butt-right" id="on-page-nav-butt-right" aria-label="nav-button-right">
-        <img src="<%= asset_path "lightning.svg" %>" alt="right-sidebar-nav">
+        <%= image_tag("lightning.svg", size: "100% * 100%", alt: "right-sidebar-nav") %>
       </button>
     </div>
 
