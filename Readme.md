@@ -1,6 +1,27 @@
+# Setup через docker, docker-compose и dip
+
+После успешного запуска проекта в 4м задании тут должно уже быть легко.
+
+- probably change .ruby-version file with your ruby version
+- cp config/database.yml.sample config/database.yml (or take from your HW #4)
+- cp -r ../rails-optimization-task4/public/uploads public (for seeded images)
+- cp .env from your HW #4 (optional)
+- cd .dev_to
+- docker-compose up
+- open localhost:3000 in your browser
+
+After setup you can
+
+- dip bundle - to bundle install after adding gems
+- dip setup - to rerun bin/setup
+- dip bash - to do any other commands or just to peek around
+
 # Задание №5
 
 ## Цели задания
+
+**ПОКА НЕ НАЧИНАЙТЕ ЭТО ЗАДАНИЕ ПОЖАЛУЙСТА, Я ЕГО НЕМНОГО ПЕРЕРАБОТАЮ В БЛИЖАЙШИЕ ДНИ**
+
 
 В этом задании немного попрактикуемся с `HTTP/2` в `Rails`.
 

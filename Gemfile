@@ -1,6 +1,6 @@
 # rubocop:disable LineLength
 source "https://rubygems.org"
-ruby "2.6.1"
+ruby "2.6.10"
 
 # Enforce git to transmitted via https.
 # workaround until bundler 2.0 is released.
@@ -16,7 +16,7 @@ end
 gem "actionpack-action_caching", "~> 1.2"
 gem "active_record_union", "~> 1.3"
 gem "acts-as-taggable-on", "~> 5.0"
-gem "acts_as_follower", github: "thepracticaldev/acts_as_follower", branch: "master"
+gem "acts_as_follower"
 gem "addressable", "~> 2.5", ">= 2.5.2"
 gem "administrate", "~> 0.11"
 gem "ahoy_email", "~> 0.5"
@@ -122,7 +122,7 @@ group :development, :test do
   gem "derailed", "~> 0.1"
   gem "erb_lint", "~> 0.0", require: false
   gem "faker", git: "https://github.com/stympy/faker.git", branch: "master"
-  gem "fix-db-schema-conflicts", github: "thepracticaldev/fix-db-schema-conflicts", branch: "master"
+  gem "fix-db-schema-conflicts"
   gem "memory_profiler", "~> 0.9"
   gem "parallel_tests", "~> 2.27"
   gem "pry-byebug", "~> 3.7"
@@ -130,8 +130,8 @@ group :development, :test do
   gem "rspec-retry", "~> 0.6"
   gem "rubocop", "~> 0.63", require: false
   gem "rubocop-rspec", "~> 1.31"
-  gem "spring", "~> 2.0"
-  gem "spring-commands-rspec", "~> 1.0"
+  # gem "spring", "~> 2.0"
+  # gem "spring-commands-rspec", "~> 1.0"
   gem "vcr", "~> 4.0"
 end
 
