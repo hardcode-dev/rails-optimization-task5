@@ -1,6 +1,0 @@
-{
-    "ruby.lint": {
-        "rubocop": true,
-        "fasterer": false,
-    }
-}
