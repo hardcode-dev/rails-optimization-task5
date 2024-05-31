@@ -2,10 +2,10 @@ x-app: &app
   build:
     context: .
     args:
-      RUBY_VERSION: '2.6.10'
+      RUBY_VERSION: '2.7.8'
       PG_MAJOR: '15'
       NODE_MAJOR: '10'
-  image: optimize-dev-to:1.0.0
+  image: optimize-dev-to:1.1.0
   environment: &env
     NODE_ENV: ${NODE_ENV:-development}
     RAILS_ENV: ${RAILS_ENV:-development}
@@ -33,6 +33,10 @@ x-backend: &backend
     ALGOLIASEARCH_APPLICATION_ID: ${ALGOLIASEARCH_APPLICATION_ID}
     ALGOLIASEARCH_API_KEY: ${ALGOLIASEARCH_API_KEY}
     ALGOLIASEARCH_SEARCH_ONLY_KEY: ${ALGOLIASEARCH_SEARCH_ONLY_KEY}
+    THRUSTER_TLS_DOMAIN: localhost
+    THRUSTER_DEBUG: 1
+    THRUSTER_HTTPS_PORT: 3000
+    TARGET_PORT: 3003
     REDIS_URL: redis://redis:6379/
     DATABASE_URL: postgres://postgres:postgres@postgres:5432
     WEBPACKER_DEV_SERVER_HOST: webpacker
@@ -58,7 +62,8 @@ services:
 
   web:
     <<: *backend
-    command: bundle exec rails server -b 0.0.0.0
+    command: thrust bin/rails server -b 0.0.0.0 -p 3003
+    # command: bundle exec falcon serve -n 1 -b https://0.0.0.0 -p 3000
     ports:
       - '3000:3000'
     depends_on:
