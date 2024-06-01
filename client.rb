@@ -1,5 +1,8 @@
 require 'openssl'
 require 'faraday'
+require 'async'
+require 'async/semaphore'
+require 'async/barrier'
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
@@ -38,41 +41,43 @@ end
 
 start = Time.now
 
-a11 = a(11)
-a12 = a(12)
-a13 = a(13)
-b1 = b(1)
+@a = Hash.new { |h, k| h[k] = [] }
+@b = {}
+@c = {}
 
-ab1 = "#{collect_sorted([a11, a12, a13])}-#{b1}"
-puts "AB1 = #{ab1}"
+Async do
+  semaphores = { a: 3, b: 2, c: 1 }.transform_values { |value| Async::Semaphore.new(value) }
+  barriers = Hash.new { |h, k| h[k] = Hash.new { |hh, kk| hh[kk] = Async::Barrier.new } }
 
-c1 = c(ab1)
-puts "C1 = #{c1}"
+  {1 => [11, 12, 13], 2 => [21, 22, 23], 3 => [31, 32, 33]}.each do |index, batch|
+    semaphores[:b].async(parent: barriers[:b][index]) do
+      @b[index] = b(index)
+    end
 
-a21 = a(21)
-a22 = a(22)
-a23 = a(23)
-b2 = b(2)
+    batch.each do |value|
+      semaphores[:a].async(parent: barriers[:a][index]) do
+        @a[index] << a(value)
+      end
+    end
+  end
 
-ab2 = "#{collect_sorted([a21, a22, a23])}-#{b2}"
-puts "AB2 = #{ab2}"
+  [1, 2, 3].each do |index|
+    semaphores[:c].async do
+      barriers[:a][index].wait
+      barriers[:b][index].wait
 
-c2 = c(ab2)
-puts "C2 = #{c2}"
+      ab_value = "#{collect_sorted(@a[index])}-#{@b[index]}"
 
-a31 = a(31)
-a32 = a(32)
-a33 = a(33)
-b3 = b(3)
+      puts "AB#{index} = #{ab_value}"
 
-ab3 = "#{collect_sorted([a31, a32, a33])}-#{b3}"
-puts "AB3 = #{ab3}"
+      @c[index] = c(ab_value)
 
-c3 = c(ab3)
-puts "C3 = #{c3}"
+      puts "C#{index} = #{@c[index]}"
+    end
+  end
+end
 
-c123 = collect_sorted([c1, c2, c3])
-result = a(c123)
+result = a(collect_sorted(@c.values))
 
 puts "FINISHED in #{Time.now - start}s."
 puts "RESULT = #{result}" # 0bbe9ecf251ef4131dd43e1600742cfb
