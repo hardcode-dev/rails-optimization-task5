@@ -1,6 +1,8 @@
 require 'openssl'
 require 'faraday'
 require 'async'
+require 'async/semaphore'
+require 'async/barrier'
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
@@ -37,65 +39,45 @@ def collect_sorted(arr)
   arr.sort.join('-')
 end
 
-def async_method_calls(items = [])
-  Async do
-    items.each do |(method_name, buf, *values)|
-      values.each do |value|
-        Fiber.schedule do
-          buf[value] = send(method_name, value)
-        end
-      end
-    end
-  end.wait
-end
-
-def c_via_ab(value)
-  ab_value = "#{collect_sorted(@a[value].values)}-#{@b[value]}"
-
-  puts "AB#{value} = #{ab_value}"
-
-  c_value = c(ab_value)
-
-  puts "C#{value} = #{c_value}"
-
-  c_value
-end
-
-def result(value = nil)
-  a(collect_sorted(@c.values_at(1, 2, 3)))
-end
-
 start = Time.now
 
-@a = Hash.new { |h, k| h[k] = {} }
+@a = Hash.new { |h, k| h[k] = [] }
 @b = {}
 @c = {}
 
-instructions = [
-  [
-    [:a, @a[1], 11, 12, 13],
-    [:b, @b, 1, 2],
-  ],
-  [
-    [:a, @a[2], 21, 22, 23],
-    [:b, @b, 3],
-    [:c_via_ab, @c, 1],
-  ],
-  [
-    [:c_via_ab, @c, 2],
-    [:a, @a[3], 31, 32, 33]
-  ],
-  [
-    [:c_via_ab, @c, 3],
-  ],
-  [
-    [:result, @a, :result]
-  ]
-]
+Async do
+  semaphores = { a: 3, b: 2, c: 1 }.transform_values { |value| Async::Semaphore.new(value) }
+  barriers = Hash.new { |h, k| h[k] = Hash.new { |hh, kk| hh[kk] = Async::Barrier.new } }
 
-instructions.each do |instruction|
-  async_method_calls(instruction)
+  {1 => [11, 12, 13], 2 => [21, 22, 23], 3 => [31, 32, 33]}.each do |index, batch|
+    semaphores[:b].async(parent: barriers[:b][index]) do
+      @b[index] = b(index)
+    end
+
+    batch.each do |value|
+      semaphores[:a].async(parent: barriers[:a][index]) do
+        @a[index] << a(value)
+      end
+    end
+  end
+
+  [1, 2, 3].each do |index|
+    semaphores[:c].async do
+      barriers[:a][index].wait
+      barriers[:b][index].wait
+
+      ab_value = "#{collect_sorted(@a[index])}-#{@b[index]}"
+
+      puts "AB#{index} = #{ab_value}"
+
+      @c[index] = c(ab_value)
+
+      puts "C#{index} = #{@c[index]}"
+    end
+  end
 end
 
+result = a(collect_sorted(@c.values))
+
 puts "FINISHED in #{Time.now - start}s."
-puts "RESULT = #{@a[:result]}" # 0bbe9ecf251ef4131dd43e1600742cfb
+puts "RESULT = #{result}" # 0bbe9ecf251ef4131dd43e1600742cfb
