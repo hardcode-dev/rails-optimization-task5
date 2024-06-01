@@ -1,5 +1,6 @@
 require 'openssl'
 require 'faraday'
+require 'async'
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
@@ -36,43 +37,65 @@ def collect_sorted(arr)
   arr.sort.join('-')
 end
 
+def async_method_calls(items = [])
+  Async do
+    items.each do |(method_name, buf, *values)|
+      values.each do |value|
+        Fiber.schedule do
+          buf[value] = send(method_name, value)
+        end
+      end
+    end
+  end.wait
+end
+
+def c_via_ab(value)
+  ab_value = "#{collect_sorted(@a[value].values)}-#{@b[value]}"
+
+  puts "AB#{value} = #{ab_value}"
+
+  c_value = c(ab_value)
+
+  puts "C#{value} = #{c_value}"
+
+  c_value
+end
+
+def result(value = nil)
+  a(collect_sorted(@c.values_at(1, 2, 3)))
+end
+
 start = Time.now
 
-a11 = a(11)
-a12 = a(12)
-a13 = a(13)
-b1 = b(1)
+@a = Hash.new { |h, k| h[k] = {} }
+@b = {}
+@c = {}
 
-ab1 = "#{collect_sorted([a11, a12, a13])}-#{b1}"
-puts "AB1 = #{ab1}"
+instructions = [
+  [
+    [:a, @a[1], 11, 12, 13],
+    [:b, @b, 1, 2],
+  ],
+  [
+    [:a, @a[2], 21, 22, 23],
+    [:b, @b, 3],
+    [:c_via_ab, @c, 1],
+  ],
+  [
+    [:c_via_ab, @c, 2],
+    [:a, @a[3], 31, 32, 33]
+  ],
+  [
+    [:c_via_ab, @c, 3],
+  ],
+  [
+    [:result, @a, :result]
+  ]
+]
 
-c1 = c(ab1)
-puts "C1 = #{c1}"
-
-a21 = a(21)
-a22 = a(22)
-a23 = a(23)
-b2 = b(2)
-
-ab2 = "#{collect_sorted([a21, a22, a23])}-#{b2}"
-puts "AB2 = #{ab2}"
-
-c2 = c(ab2)
-puts "C2 = #{c2}"
-
-a31 = a(31)
-a32 = a(32)
-a33 = a(33)
-b3 = b(3)
-
-ab3 = "#{collect_sorted([a31, a32, a33])}-#{b3}"
-puts "AB3 = #{ab3}"
-
-c3 = c(ab3)
-puts "C3 = #{c3}"
-
-c123 = collect_sorted([c1, c2, c3])
-result = a(c123)
+instructions.each do |instruction|
+  async_method_calls(instruction)
+end
 
 puts "FINISHED in #{Time.now - start}s."
-puts "RESULT = #{result}" # 0bbe9ecf251ef4131dd43e1600742cfb
+puts "RESULT = #{@a[:result]}" # 0bbe9ecf251ef4131dd43e1600742cfb
