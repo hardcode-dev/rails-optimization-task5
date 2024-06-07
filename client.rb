@@ -24,22 +24,22 @@ OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 #
 def a(value)
   -> {
-    puts "https://localhost:9292/a?value=#{value}"
-    Async(transient: true) { Faraday.get("https://localhost:9292/a?value=#{value}").body }.wait
+    puts "http://localhost:9292/a?value=#{value}"
+    Async(transient: true) { Faraday.get("http://localhost:9292/a?value=#{value}").body }.wait
   }
 end
 
 def b(value)
   -> {
-    puts "https://localhost:9292/b?value=#{value}"
-    Async(transient: true) { Faraday.get("https://localhost:9292/b?value=#{value}").body }.wait
+    puts "http://localhost:9292/b?value=#{value}"
+    Async(transient: true) { Faraday.get("http://localhost:9292/b?value=#{value}").body }.wait
   }
 end
 
 def c(value)
   -> {
-    puts "https://localhost:9292/c?value=#{value}"
-    Async(transient: true) { Faraday.get("https://localhost:9292/c?value=#{value}").body }.wait
+    puts "http://localhost:9292/c?value=#{value}"
+    Async(transient: true) { Faraday.get("http://localhost:9292/c?value=#{value}").body }.wait
   }
 end
 

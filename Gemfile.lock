@@ -18,11 +18,9 @@ GEM
       traces (>= 0.10.0)
     async-http-cache (0.4.3)
       async-http (~> 0.56)
-    async-io (1.43.2)
-      async
     async-pool (0.6.1)
       async (>= 1.25)
-    async-service (0.10.0)
+    async-service (0.12.0)
       async
       async-container (~> 0.16)
     base64 (0.2.0)
@@ -31,19 +29,18 @@ GEM
       fiber-annotation
       fiber-local (~> 1.1)
       json
-    falcon (0.44.0)
+    falcon (0.47.6)
       async
-      async-container (~> 0.17)
-      async-http (~> 0.57)
+      async-container (~> 0.18)
+      async-http (~> 0.66, >= 0.66.3)
       async-http-cache (~> 0.4.0)
-      async-io (~> 1.22)
-      async-service (~> 0.10.0)
+      async-service (~> 0.10)
       bundler
       localhost (~> 1.1)
       openssl (~> 3.0)
       process-metrics (~> 0.2.0)
-      protocol-rack (~> 0.1)
-      samovar (~> 2.1)
+      protocol-rack (~> 0.5)
+      samovar (~> 2.3)
     faraday (2.9.1)
       faraday-net_http (>= 2.0, < 3.2)
     faraday-net_http (3.1.0)
@@ -106,7 +103,7 @@ PLATFORMS
 
 DEPENDENCIES
   async
-  falcon (= 0.44.0)
+  falcon
   faraday
   pry
   sinatra
