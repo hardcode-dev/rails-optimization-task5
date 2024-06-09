@@ -7,6 +7,7 @@ supervisor
 
 rack 'example.localhost' do
 	scheme 'http'
+	count 1
 	protocol {Async::HTTP::Protocol::HTTP1}
 	endpoint do
 		Async::HTTP::Endpoint.for(scheme, "localhost", port: 9292, protocol: protocol)
