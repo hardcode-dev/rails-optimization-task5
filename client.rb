@@ -1,5 +1,5 @@
 require 'openssl'
-require 'faraday'
+require 'typhoeus'
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
@@ -14,23 +14,15 @@ OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 #   - работает 1 секунду
 #   - одновременно можно запускать не более одного
 #
-def a(value)
-  puts "https://localhost:9292/a?value=#{value}"
-  Faraday.get("https://localhost:9292/a?value=#{value}").body
+def make_request(endpoint, value)
+  Typhoeus::Request.new(
+    "https://localhost:9292/#{endpoint}",
+    method: :get,
+    params: { value: value },
+    ssl_verifypeer: false,
+    timeout: 10
+  )
 end
-
-def b(value)
-  puts "https://localhost:9292/b?value=#{value}"
-  Faraday.get("https://localhost:9292/b?value=#{value}").body
-end
-
-def c(value)
-  puts "https://localhost:9292/c?value=#{value}"
-  Faraday.get("https://localhost:9292/c?value=#{value}").body
-end
-
-# Референсное решение, приведённое ниже работает правильно, занимает ~19.5 секунд
-# Надо сделать в пределах 7 секунд
 
 def collect_sorted(arr)
   arr.sort.join('-')
@@ -38,41 +30,83 @@ end
 
 start = Time.now
 
-a11 = a(11)
-a12 = a(12)
-a13 = a(13)
-b1 = b(1)
+hydra = Typhoeus::Hydra.new(max_concurrency: 6)
+responses = {}
 
-ab1 = "#{collect_sorted([a11, a12, a13])}-#{b1}"
+a_batches = {
+  1 => [11, 12, 13].map { |v| make_request('a', v) },
+  2 => [21, 22, 23].map { |v| make_request('a', v) },
+  3 => [31, 32, 33].map { |v| make_request('a', v) }
+}
+b_requests = [1, 2, 3].map { |v| make_request('b', v) }
+
+a_batches.each do |batch, reqs|
+  reqs.each do |req|
+    req.on_complete do |response|
+      responses["a#{batch}_#{req.options[:params][:value]}".to_sym] = response.body
+    end
+  end
+end
+
+b_requests.each_with_index do |req, idx|
+  req.on_complete do |response|
+    responses["b_#{idx + 1}".to_sym] = response.body
+  end
+end
+# Queue first batch
+a_batches[1].each { |req| hydra.queue(req) }
+[b_requests[0], b_requests[1]].each { |req| hydra.queue(req) }
+# Run first batch
+hydra.run
+
+# Queue second batch
+ab1 = "#{collect_sorted(a_batches[1].map! { |req| responses["a1_#{req.options[:params][:value]}".to_sym] })}-#{responses[:b_1]}"
 puts "AB1 = #{ab1}"
+c1_req = make_request('c', ab1)
+c1_req.on_complete { |response| responses[:c1] = response.body }
+hydra.queue(c1_req)
 
-c1 = c(ab1)
-puts "C1 = #{c1}"
+a_batches[2].each { |req| hydra.queue(req) }
+hydra.queue(b_requests[2])
+# Run second batch
+hydra.run
 
-a21 = a(21)
-a22 = a(22)
-a23 = a(23)
-b2 = b(2)
-
-ab2 = "#{collect_sorted([a21, a22, a23])}-#{b2}"
+ab2 = "#{collect_sorted(a_batches[2].map! { |req| responses["a2_#{req.options[:params][:value]}".to_sym] })}-#{responses[:b_2]}"
+puts "C1 = #{responses[:c1]}"
 puts "AB2 = #{ab2}"
 
-c2 = c(ab2)
-puts "C2 = #{c2}"
+# Queue third batch
+c2_req = make_request('c', ab2)
+c2_req.on_complete { |response| responses[:c2] = response.body }
+hydra.queue(c2_req)
+a_batches[3].each { |req| hydra.queue(req) }
 
-a31 = a(31)
-a32 = a(32)
-a33 = a(33)
-b3 = b(3)
+# Run third batch
+hydra.run
 
-ab3 = "#{collect_sorted([a31, a32, a33])}-#{b3}"
+puts "C2 = #{responses[:c2]}"
+ab3 = "#{collect_sorted(a_batches[3].map! { |req| responses["a3_#{req.options[:params][:value]}".to_sym] })}-#{responses[:b_3]}"
 puts "AB3 = #{ab3}"
 
-c3 = c(ab3)
-puts "C3 = #{c3}"
+# Queue fourth batch
+c3_req = make_request('c', ab3)
+c3_req.on_complete { |response| responses[:c3] = response.body }
+hydra.queue(c3_req)
 
-c123 = collect_sorted([c1, c2, c3])
-result = a(c123)
+# Run fourth batch
+hydra.run
+
+puts "C3 = #{responses[:c3]}"
+c123 = collect_sorted([responses[:c1], responses[:c2], responses[:c3]])
+
+# Final processing
+final_req = make_request('a', c123)
+final_req.on_complete { |response| responses[:final] = response.body }
+hydra.queue(final_req)
+hydra.run
 
 puts "FINISHED in #{Time.now - start}s."
-puts "RESULT = #{result}" # 0bbe9ecf251ef4131dd43e1600742cfb
+puts "RESULT = #{responses[:final]}" # 0bbe9ecf251ef4131dd43e1600742cfb
+
+# FINISHED in 7.064975s.
+# RESULT = 0bbe9ecf251ef4131dd43e1600742cfb
