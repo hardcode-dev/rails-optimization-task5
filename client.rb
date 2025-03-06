@@ -1,5 +1,8 @@
 require 'openssl'
-require 'typhoeus'
+require 'faraday'
+require 'async'
+require 'async/barrier'
+require 'async/semaphore'
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
@@ -14,99 +17,81 @@ OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 #   - работает 1 секунду
 #   - одновременно можно запускать не более одного
 #
-def make_request(endpoint, value)
-  Typhoeus::Request.new(
-    "https://localhost:9292/#{endpoint}",
-    method: :get,
-    params: { value: value },
-    ssl_verifypeer: false,
-    timeout: 10
-  )
+def a(value)
+  puts "https://localhost:9292/a?value=#{value}"
+  Faraday.get("https://localhost:9292/a?value=#{value}").body
 end
 
+def b(value)
+  puts "https://localhost:9292/b?value=#{value}"
+  Faraday.get("https://localhost:9292/b?value=#{value}").body
+end
+
+def c(value)
+  puts "https://localhost:9292/c?value=#{value}"
+  Faraday.get("https://localhost:9292/c?value=#{value}").body
+end
+
+# Референсное решение, приведённое ниже работает правильно, занимает ~19.5 секунд
+# Надо сделать в пределах 7 секунд
+
 def collect_sorted(arr)
-  arr.sort.join('-')
+  arr.compact.sort.join('-')
 end
 
 start = Time.now
 
-hydra = Typhoeus::Hydra.new(max_concurrency: 6)
-responses = {}
+result = Async do
+  barrier = Async::Barrier.new
+  semaphore_a = Async::Semaphore.new(3, parent: barrier)
+  semaphore_b = Async::Semaphore.new(2, parent: barrier)
+  semaphore_c = Async::Semaphore.new(1, parent: barrier)
 
-a_batches = {
-  1 => [11, 12, 13].map { |v| make_request('a', v) },
-  2 => [21, 22, 23].map { |v| make_request('a', v) },
-  3 => [31, 32, 33].map { |v| make_request('a', v) }
-}
-b_requests = [1, 2, 3].map { |v| make_request('b', v) }
+  a_results = {
+    batch1: Array.new(3),
+    batch2: Array.new(3),
+    batch3: Array.new(3)
+  }
+  b_results = Array.new(3)
+  c_results = Array.new(3)
 
-a_batches.each do |batch, reqs|
-  reqs.each do |req|
-    req.on_complete do |response|
-      responses["a#{batch}_#{req.options[:params][:value]}".to_sym] = response.body
+  3.times do |i|
+    semaphore_a.async do
+      a_results[:batch1][i] = a(11 + i)
+      a_results[:batch2][i] = a(21 + i)
     end
   end
-end
 
-b_requests.each_with_index do |req, idx|
-  req.on_complete do |response|
-    responses["b_#{idx + 1}".to_sym] = response.body
+  2.times do |i|
+    semaphore_b.async { b_results[i] = b(i + 1) }
   end
-end
-# Queue first batch
-a_batches[1].each { |req| hydra.queue(req) }
-[b_requests[0], b_requests[1]].each { |req| hydra.queue(req) }
-# Run first batch
-hydra.run
 
-# Queue second batch
-ab1 = "#{collect_sorted(a_batches[1].map! { |req| responses["a1_#{req.options[:params][:value]}".to_sym] })}-#{responses[:b_1]}"
-puts "AB1 = #{ab1}"
-c1_req = make_request('c', ab1)
-c1_req.on_complete { |response| responses[:c1] = response.body }
-hydra.queue(c1_req)
+  barrier.wait
 
-a_batches[2].each { |req| hydra.queue(req) }
-hydra.queue(b_requests[2])
-# Run second batch
-hydra.run
+  ab1 = "#{collect_sorted(a_results[:batch1])}-#{b_results[0]}"
+  ab2 = "#{collect_sorted(a_results[:batch2])}-#{b_results[1]}"
 
-ab2 = "#{collect_sorted(a_batches[2].map! { |req| responses["a2_#{req.options[:params][:value]}".to_sym] })}-#{responses[:b_2]}"
-puts "C1 = #{responses[:c1]}"
-puts "AB2 = #{ab2}"
+  semaphore_c.async do
+    c_results[0] = c(ab1)
+    c_results[1] = c(ab2)
+  end
 
-# Queue third batch
-c2_req = make_request('c', ab2)
-c2_req.on_complete { |response| responses[:c2] = response.body }
-hydra.queue(c2_req)
-a_batches[3].each { |req| hydra.queue(req) }
+  3.times do |i|
+    semaphore_a.async { a_results[:batch3][i] = a(31 + i) }
+  end
 
-# Run third batch
-hydra.run
+  semaphore_b.async { b_results[2] = b(3) }
 
-puts "C2 = #{responses[:c2]}"
-ab3 = "#{collect_sorted(a_batches[3].map! { |req| responses["a3_#{req.options[:params][:value]}".to_sym] })}-#{responses[:b_3]}"
-puts "AB3 = #{ab3}"
+  barrier.wait
 
-# Queue fourth batch
-c3_req = make_request('c', ab3)
-c3_req.on_complete { |response| responses[:c3] = response.body }
-hydra.queue(c3_req)
+  ab3 = "#{collect_sorted(a_results[:batch3])}-#{b_results[2]}"
+  semaphore_c.async { c_results[2] = c(ab3) }
 
-# Run fourth batch
-hydra.run
+  barrier.wait
 
-puts "C3 = #{responses[:c3]}"
-c123 = collect_sorted([responses[:c1], responses[:c2], responses[:c3]])
-
-# Final processing
-final_req = make_request('a', c123)
-final_req.on_complete { |response| responses[:final] = response.body }
-hydra.queue(final_req)
-hydra.run
+  c123 = collect_sorted(c_results)
+  a(c123)
+end.wait
 
 puts "FINISHED in #{Time.now - start}s."
-puts "RESULT = #{responses[:final]}" # 0bbe9ecf251ef4131dd43e1600742cfb
-
-# FINISHED in 7.064975s.
-# RESULT = 0bbe9ecf251ef4131dd43e1600742cfb
+puts "RESULT = #{result}" # 0bbe9ecf251ef4131dd43e1600742cfb
