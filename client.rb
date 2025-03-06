@@ -1,5 +1,8 @@
 require 'openssl'
 require 'faraday'
+require 'async'
+require 'async/barrier'
+require 'async/semaphore'
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
@@ -33,46 +36,62 @@ end
 # Надо сделать в пределах 7 секунд
 
 def collect_sorted(arr)
-  arr.sort.join('-')
+  arr.compact.sort.join('-')
 end
 
 start = Time.now
 
-a11 = a(11)
-a12 = a(12)
-a13 = a(13)
-b1 = b(1)
+result = Async do
+  barrier = Async::Barrier.new
+  semaphore_a = Async::Semaphore.new(3, parent: barrier)
+  semaphore_b = Async::Semaphore.new(2, parent: barrier)
+  semaphore_c = Async::Semaphore.new(1, parent: barrier)
 
-ab1 = "#{collect_sorted([a11, a12, a13])}-#{b1}"
-puts "AB1 = #{ab1}"
+  a_results = {
+    batch1: Array.new(3),
+    batch2: Array.new(3),
+    batch3: Array.new(3)
+  }
+  b_results = Array.new(3)
+  c_results = Array.new(3)
 
-c1 = c(ab1)
-puts "C1 = #{c1}"
+  3.times do |i|
+    semaphore_a.async do
+      a_results[:batch1][i] = a(11 + i)
+      a_results[:batch2][i] = a(21 + i)
+    end
+  end
 
-a21 = a(21)
-a22 = a(22)
-a23 = a(23)
-b2 = b(2)
+  2.times do |i|
+    semaphore_b.async { b_results[i] = b(i + 1) }
+  end
 
-ab2 = "#{collect_sorted([a21, a22, a23])}-#{b2}"
-puts "AB2 = #{ab2}"
+  barrier.wait
 
-c2 = c(ab2)
-puts "C2 = #{c2}"
+  ab1 = "#{collect_sorted(a_results[:batch1])}-#{b_results[0]}"
+  ab2 = "#{collect_sorted(a_results[:batch2])}-#{b_results[1]}"
 
-a31 = a(31)
-a32 = a(32)
-a33 = a(33)
-b3 = b(3)
+  semaphore_c.async do
+    c_results[0] = c(ab1)
+    c_results[1] = c(ab2)
+  end
 
-ab3 = "#{collect_sorted([a31, a32, a33])}-#{b3}"
-puts "AB3 = #{ab3}"
+  3.times do |i|
+    semaphore_a.async { a_results[:batch3][i] = a(31 + i) }
+  end
 
-c3 = c(ab3)
-puts "C3 = #{c3}"
+  semaphore_b.async { b_results[2] = b(3) }
 
-c123 = collect_sorted([c1, c2, c3])
-result = a(c123)
+  barrier.wait
+
+  ab3 = "#{collect_sorted(a_results[:batch3])}-#{b_results[2]}"
+  semaphore_c.async { c_results[2] = c(ab3) }
+
+  barrier.wait
+
+  c123 = collect_sorted(c_results)
+  a(c123)
+end.wait
 
 puts "FINISHED in #{Time.now - start}s."
 puts "RESULT = #{result}" # 0bbe9ecf251ef4131dd43e1600742cfb
