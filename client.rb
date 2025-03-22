@@ -1,5 +1,7 @@
 require 'openssl'
 require 'faraday'
+require 'async'
+require 'async/semaphore'
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
@@ -36,43 +38,54 @@ def collect_sorted(arr)
   arr.sort.join('-')
 end
 
+# Создаём семафоры для ограничения параллельных запросов
+SEMAPHORE_A = Async::Semaphore.new(3) # максимум 3 одновременных запроса типа A
+SEMAPHORE_B = Async::Semaphore.new(2) # ма  ксимум 2 одновременных запроса типа B
+SEMAPHORE_C = Async::Semaphore.new(1) # максимум 1 запрос типа C
+EXPECTED_HASH = "0bbe9ecf251ef4131dd43e1600742cfb"
+MAX_EXECUTION_TIME = 7
+
 start = Time.now
+result = Sync do
+  ab1 = Async do
+    b1 = SEMAPHORE_B.async{ b(1) } # так как запросы B выполняются дольше (2 секунды),
+                                   # их нужно запускать первыми, чтобы они начали выполняться как можно раньше
+                                   # и не блокировали остальные операции в конце
+    a11 = SEMAPHORE_A.async{ a(11) }
+    a12 = SEMAPHORE_A.async{ a(12) }
+    a13 = SEMAPHORE_A.async{ a(13) }
 
-a11 = a(11)
-a12 = a(12)
-a13 = a(13)
-b1 = b(1)
+    "#{collect_sorted([a11.wait, a12.wait, a13.wait])}-#{b1.wait}"
+  end
 
-ab1 = "#{collect_sorted([a11, a12, a13])}-#{b1}"
-puts "AB1 = #{ab1}"
+  ab2 = Async do
+    b2 = SEMAPHORE_B.async{ b(2) }
+    a21 = SEMAPHORE_A.async{ a(21) }
+    a22 = SEMAPHORE_A.async{ a(22) }
+    a23 = SEMAPHORE_A.async{ a(23) }
+    "#{collect_sorted([a21.wait, a22.wait, a23.wait])}-#{b2.wait}"
+  end
 
-c1 = c(ab1)
-puts "C1 = #{c1}"
+  ab3 = Async do
+    b3 = SEMAPHORE_B.async{ b(3) }
+    a31 = SEMAPHORE_A.async{ a(31) }
+    a32 = SEMAPHORE_A.async{ a(32) }
+    a33 = SEMAPHORE_A.async{ a(33) }
+    "#{collect_sorted([a31.wait, a32.wait, a33.wait])}-#{b3.wait}"
+  end
 
-a21 = a(21)
-a22 = a(22)
-a23 = a(23)
-b2 = b(2)
+  c123 = Async do
+    c1 = SEMAPHORE_C.async{ c(ab1.wait) }
+    c2 = SEMAPHORE_C.async{ c(ab2.wait) }
+    c3 = SEMAPHORE_C.async{ c(ab3.wait) }
+    collect_sorted([c1.wait, c2.wait, c3.wait])
+  end
 
-ab2 = "#{collect_sorted([a21, a22, a23])}-#{b2}"
-puts "AB2 = #{ab2}"
+  a(c123.wait)
+end
 
-c2 = c(ab2)
-puts "C2 = #{c2}"
-
-a31 = a(31)
-a32 = a(32)
-a33 = a(33)
-b3 = b(3)
-
-ab3 = "#{collect_sorted([a31, a32, a33])}-#{b3}"
-puts "AB3 = #{ab3}"
-
-c3 = c(ab3)
-puts "C3 = #{c3}"
-
-c123 = collect_sorted([c1, c2, c3])
-result = a(c123)
-
-puts "FINISHED in #{Time.now - start}s."
-puts "RESULT = #{result}" # 0bbe9ecf251ef4131dd43e1600742cfb
+total_time = Time.now - start
+puts "FINISHED in #{total_time}s."
+puts "VALID DURATION: #{total_time < MAX_EXECUTION_TIME}"
+puts "RESULT = #{result}"
+puts "VALID RESULT: #{result==EXPECTED_HASH}"
