@@ -1,35 +1,35 @@
-# Задание №5
+# Task #5
 
-## Цели задания
+## Task Goals
 
-В этом задании немного попрактикуемся с `HTTP/2` в `Rails`.
+In this task, we will practice a bit with `HTTP/2` in `Rails`.
 
-Польза:
+Benefits:
 
-- научиться настраивать `HTTPS` для локального `Rails`-приложения
-- научиться настраивать `HTTP/2` `reverse proxy` с поддержкой `server-push`
-- научиться делать `server-push`, сравнить его с `inlining`
+- Learn to configure `HTTPS` for a local `Rails` application
+- Learn to configure an `HTTP/2` `reverse proxy` with `server-push` support
+- Learn to do `server-push`, compare it with `inlining`
 
 ## ToDo
 
-Работать будем на примере проекта `dev.to`, как и в прошлом задании.
+We will work on the example of the `dev.to` project, as in the previous task.
 
-Ресурсы:
+Resources:
 
-- https://github.com/FiloSottile/mkcert - инструмент для настройки локальных сертификатов одной командой
-- https://www.nginx.com/blog/nginx-1-13-9-http2-server-push/ - настройка `http2-server-push` в `NGinx`.
-- https://github.com/surma/http2-push-detect - утилита для проверки `server-push`
-- http://railscasts.com/episodes/357-adding-ssl?view=asciicast - старый, но очень понятный `RailsCast` про `ssl`
+- https://github.com/FiloSottile/mkcert - tool for setting up local certificates with a single command
+- https://www.nginx.com/blog/nginx-1-13-9-http2-server-push/ - configuring `http2-server-push` in `NGinx`.
+- https://github.com/surma/http2-push-detect - utility for checking `server-push`
+- http://railscasts.com/episodes/357-adding-ssl?view=asciicast - old but very clear `RailsCast` about `ssl`
 
-### Шаг 1. Настроить сертификат для локального HTTPS
+### Step 1. Configure certificate for local HTTPS
 
-Можно сделать с использованием `mkcert`
+Can be done using `mkcert`
 
-### Шаг 2. Настраиваем NGinx как reverse-proxy
+### Step 2. Configure NGinx as reverse-proxy
 
-Установить или обновить `NGinx`.
+Install or update `NGinx`.
 
-Конфигурируем `NGinx` так, чтобы он принимал `https`-запросы `https://localhost` и ходил в `upstream` на `http://localhost:3000`.
+Configure `NGinx` to accept `https` requests at `https://localhost` and forward to `upstream` at `http://localhost:3000`.
 
 ```
 server {
@@ -53,11 +53,11 @@ server {
 }
 ```
 
-На этом шаге браузер должен успешно открывать `https://localhost`
+At this step, the browser should successfully open `https://localhost`
 
-### Шаг 3. Настроить HTTP/2 и server-push
+### Step 3. Configure HTTP/2 and server-push
 
-Дополняем конфиг `NGinx` поддержкой `HTTP/2` и `server-push`
+Extend the `NGinx` config with `HTTP/2` and `server-push` support
 
 ```
 server {
@@ -71,9 +71,9 @@ server {
 }
 ```
 
-### Шаг 4. Поэксперементировать с HTTP/2 server-push
+### Step 4. Experiment with HTTP/2 server-push
 
-На главном экране в мобильном виде `dev.to` есть ряд картинок:
+On the main screen in mobile view of `dev.to` there are several images:
 
 - `connect.svg`
 - `bell.svg`
@@ -83,18 +83,18 @@ server {
 
 ![Screenshot](https://github.com/spajic/task-5/blob/master/screenshot.png?raw=true)
 
-Картинки из меню: `connect.svg`, `bell.svg`, `menu.svg` – заинлайнены.
-Картинки `stack.svg` и `lightning.svg` – нет.
+Images from the menu: `connect.svg`, `bell.svg`, `menu.svg` - are inlined.
+Images `stack.svg` and `lightning.svg` - are not.
 
-Попробуйте перезагружать эту страницу с эмуляцией медленного соединения и посмотреть как рендерятся эти картинки при перезагрузке.
+Try reloading this page with slow connection emulation and see how these images render during reload.
 
-Дальше, давайте попробуем двинуться в сторону подхода `HTTP/2` и не будем инлайнить `svg`, а подключим их как обычные картинки.
+Next, let's try to move towards the `HTTP/2` approach and not inline `svg`, but include them as regular images.
 
-Например, `image_tag("bell.svg", size: "100% * 100%")`
+For example, `image_tag("bell.svg", size: "100% * 100%")`
 
-Теперь давайте добавим `server-push`!
+Now let's add `server-push`!
 
-Для этого нам нужно установить специальные заголовки:
+For this, we need to set special headers:
 
 ```
 # stories_controller.rb
@@ -111,11 +111,11 @@ def index
 end
 ```
 
-На этом шаге нужно убедиться, что `server-push` работает.
+At this step, you need to verify that `server-push` works.
 
-В `Chrome` `DevTools` в панели `Network` вы должны увидеть, что запросы к этим картинкам делаются по протоколу `h2`, а `Initiator` = `Push/Other`
+In `Chrome` `DevTools` in the `Network` panel, you should see that requests to these images are made using the `h2` protocol, and `Initiator` = `Push/Other`
 
-Ещё один способ проверить работу `server-push` - утилита `http2-push-detect`
+Another way to check `server-push` operation is the `http2-push-detect` utility
 
 ```
 http2-push-detect https://localhost
@@ -126,72 +126,72 @@ Receiving pushed resource: /assets/stack.svg
 Receiving pushed resource: /assets/lightning.svg
 ```
 
-Теперь поэксперементируйте, попробуйте включать и выключать `server-push` для тех или иных картинок и оцените, как это сказывается на их рендеринге.
+Now experiment, try enabling and disabling `server-push` for various images and evaluate how this affects their rendering.
 
-### Шаг 5. Измерение эффекта сделанных изменений
+### Step 5. Measuring the effect of changes made
 
-Сравним вариант с `server-push` и с обычными картинками без инлайнинга и без пуша.
+Let's compare the `server-push` variant with regular images without inlining and without push.
 
-Для этого воспользуемся `sitespeed.io` (**подробно расскажу об этом мощном инструменте в лекции №6**)
+For this, we will use `sitespeed.io` (**I will talk about this powerful tool in detail in lecture #6**)
 
-#### 5.1 Анализ без `server-push`
+#### 5.1 Analysis without `server-push`
 
-Выполните анализ версии без `server-push` и без `inline`:
+Perform analysis of the version without `server-push` and without `inline`:
 
 ```
 docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io --mobile -n 5 --preUrl https://host.docker.internal/ https://host.docker.internal/
 
-# --mobile - мобильный вид
-# -n 5 - 5 повторов
-# --preUrl https://host.docker.internal/ - урл, первого захода
-# https://host.docker.internal/ - урл повтороного захода, который и анализируем
-# а вообще https://host.docker.internal/ - это https://localhost, на котором стоит ваш локальный `HTTP/2-proxy` с точки зрения `docker`.
+# --mobile - mobile view
+# -n 5 - 5 repeats
+# --preUrl https://host.docker.internal/ - URL of the first visit
+# https://host.docker.internal/ - URL of the repeat visit, which we analyze
+# in general https://host.docker.internal/ - this is https://localhost, where your local `HTTP/2-proxy` sits from `docker`'s perspective.
 ```
 
-Откройте сгенерированный отчёт `sitespeed.io`, зайдите на вкладку `Pages`, там провалитесь в отчёт по единственной странице, и внизу воспользуйтесь кнопкой `DOWNLOAD HAR` - сохраните `HAR`-файл, закомиттьте его.
+Open the generated `sitespeed.io` report, go to the `Pages` tab, click into the report for the single page, and at the bottom use the `DOWNLOAD HAR` button - save the `HAR` file, commit it.
 
-#### 5.2. Анализ с `server-push`
+#### 5.2. Analysis with `server-push`
 
-Сделайте то же, что в пункте `5.1`, но с версией, где устанавливаются заголовки `server-push`. Сохраните `HAR`-файл, закомиттьте его.
+Do the same as in step `5.1`, but with the version where `server-push` headers are set. Save the `HAR` file, commit it.
 
-#### 5.3 Сравнение результатов
+#### 5.3 Comparing results
 
-Сравните два полученных `HAR`-файла с помощью https://compare.sitespeed.io/
+Compare the two `HAR` files obtained using https://compare.sitespeed.io/
 
-**Обязательно добавьте ссылку на сравнение в описание `PR`**
+**Be sure to add a link to the comparison in the `PR` description**
 
-Вы должны увидеть на `Waterfall`, что `server-push` картинки отправляются в самую первую очередь.
+You should see in the `Waterfall` that `server-push` images are sent first.
 
-На `filmstrip` и `video` также можно увидеть, что `server-push` картинки действительно появляются заметно раньше.
+In `filmstrip` and `video` you can also see that `server-push` images indeed appear noticeably earlier.
 
-## Как сдать задание
+## How to submit the task
 
-Нужно сделать `PR` в этот репозиторий с вашими изменениями кода `dev.to` для использования `server-push`, конфигом `NGinx`, ссылкой на сравнение `HAR`-файлов и описанием.
+You need to make a `PR` to this repository with your changes to the `dev.to` code for using `server-push`, the `NGinx` config, a link to the `HAR` file comparison, and a description.
 
-### Чеклист для сдачи задания
+### Checklist for task submission
 
-- [x] Реализация `server-push` для указанных в задании картинок
-- [x] Конфиг `NGinx`
-- [x] Ссылка на сравнение `HAR`-файлов с `server-push` и без
-- [ ] Бонус 1 про `dev.to`
-- [ ] Бонус 2 про `Falcon`
+- [x] Implementation of `server-push` for images specified in the task
+- [x] `NGinx` config
+- [x] Link to comparison of `HAR` files with and without `server-push`
+- [ ] Bonus 1 about `dev.to`
+- [ ] Bonus 2 about `Falcon`
 
 
-## Bonus 1. Аудит dev.to
+## Bonus 1. Auditing dev.to
 
-Теперь, когда у вас сформировалась интуиция по работе с `HTTP/2` и `server-push`, постройте и проанализируйте отчёт `WebPageTest` для сайта `dev.to` (на проде).
+Now that you have developed intuition for working with `HTTP/2` and `server-push`, build and analyze a `WebPageTest` report for the `dev.to` site (in production).
 
-Видите ли вы какие-то возможности использовать возможности `HTTP/2` для оптимизации `dev.to`, исходя из отчётов `WPT`?
+Do you see any opportunities to use `HTTP/2` capabilities to optimize `dev.to`, based on `WPT` reports?
 
-Видите ли какие-то точки роста в остальном?
+Do you see any growth points otherwise?
 
 ## Bonus 2. Falcon HTTP/2
 
-Сервер `Falcon` https://github.com/socketry/falcon утверждает, что может сервить `Rails`-приложения и из коробки поддерживает `HTTP/2`.
+The `Falcon` server https://github.com/socketry/falcon claims that it can serve `Rails` applications and supports `HTTP/2` out of the box.
 
-Попробуйте настроить работу `dev.to` с `server-push` для `Falcon`.
+Try configuring `dev.to` with `server-push` for `Falcon`.
 
-Сделайте сравнительный бенчмарк `puma` и `falcon` на примере главной страницы `dev.to`.
+Make a comparative benchmark of `puma` and `falcon` using the `dev.to` main page as an example.
 
 <div align="center">
   <br>
@@ -200,7 +200,7 @@ docker run --rm -v "$(pwd)":/sitespeed.io sitespeedio/sitespeed.io --mobile -n 5
     src="https://thepracticaldev.s3.amazonaws.com/i/ro3538by3b2fupbs63sr.png"
     width=500px
   />
-  <h1>DEV Community 👩‍💻👨‍💻</h1>
+  <h1>DEV Community</h1>
   <strong>The Human Layer of the Stack</strong>
 </div>
 <br/>
@@ -232,7 +232,7 @@ Welcome to the [dev.to](https://dev.to) codebase. We are so excited to have you.
 
 ## What is dev.to?
 
-[dev.to](https://dev.to) (or just DEV) is a platform where software developers write articles, take part in discussions, and build their professional profiles. We value supportive and constructive dialogue in the pursuit of great code and career growth for all members. The ecosystem spans from beginner to advanced developers, and all are welcome to find their place within our community. ❤️
+[dev.to](https://dev.to) (or just DEV) is a platform where software developers write articles, take part in discussions, and build their professional profiles. We value supportive and constructive dialogue in the pursuit of great code and career growth for all members. The ecosystem spans from beginner to advanced developers, and all are welcome to find their place within our community.
 
 ## Table of Contents
 
@@ -277,7 +277,7 @@ When in doubt, ask a [core team member](#core-team)! You can mention us in any i
 2.  Create a branch, naming it either a feature or bug: `git checkout -b feature/that-new-feature` or `bug/fixing-that-bug`
 3.  Code and commit your changes. Bonus points if you write a [good commit message](https://chris.beams.io/posts/git-commit/): `git commit -m 'Add some feature'`
 4.  Push to the branch: `git push origin feature/that-new-feature`
-5.  [Create a pull request](#create-a-pull-request) for your branch 🎉
+5.  [Create a pull request](#create-a-pull-request) for your branch
 
 Note: be sure to [maintain your fork](https://docs.dev.to/maintaining-your-fork)!
 
@@ -307,11 +307,11 @@ _Please note: all commits in a pull request will be squashed when merged, but wh
 
 Whether you are stuck with feature implementation, first-time setup, or you just want to tell us something could be done better, check out our [OSS thread](https://dev.to/devteam/devto-open-source-helpdiscussion-thread-v0-1l45) or create an issue. You can also mention any [core team member](#core-team) in an issue and we'll respond as soon as possible.
 
-### 👉 [OSS Help/Discussion Thread](https://dev.to/devteam/devto-open-source-helpdiscussion-thread-v0-1l45) 👈
+### [OSS Help/Discussion Thread](https://dev.to/devteam/devto-open-source-helpdiscussion-thread-v0-1l45)
 
 ### The bottom line
 
-We are all humans trying to work together to improve the community. Always be kind and appreciate the need for tradeoffs. ❤️
+We are all humans trying to work together to improve the community. Always be kind and appreciate the need for tradeoffs.
 
 ## Codebase
 
@@ -389,7 +389,7 @@ Our docker implementation is incomplete and may not work smoothly. Please kindly
 We're mostly a Rails app, with a bit of Webpack sprinkled in. **For most cases, simply running `bin/rails server` will do.** If you're working with Webpack though, you'll need to run the following:
 
 - Run **`bin/startup`** to start the server, Webpack, and our job runner `delayed_job`. `bin/startup` runs `foreman start -f Procfile.dev` under the hood.
-- `alias start="bin/startup"` makes this even faster. 😊
+- `alias start="bin/startup"` makes this even faster.
 - If you're using **`pry`** for debugging in Rails, note that using `foreman` and `pry` together works, but it's not as clean as `bin/rails server`.
 
 Here are some singleton commands you may need, usually in a separate instance/tab of your shell.
@@ -453,5 +453,5 @@ Any questions, please refer to our [license FAQ](http://docs.dev.to/license-faq/
     src="https://thepracticaldev.s3.amazonaws.com/uploads/user/profile_image/31047/af153cd6-9994-4a68-83f4-8ddf3e13f0bf.jpg"
   />
   <br/>
-  <strong>Happy Coding</strong> ❤️
+  <strong>Happy Coding</strong>
 </p>
